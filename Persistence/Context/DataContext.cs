@@ -27,6 +27,22 @@ namespace Persistence.Context
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Category>()
+                .HasIndex(p => p.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Complaint>()
+                .Property(p => p.Number)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Order>()
+                .Property(p => p.Number)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Producer>()
+                .HasIndex(p => p.Name)
+                .IsUnique();
+            
             modelBuilder.Entity<Product>()
                 .HasIndex(p => p.Name)
                 .IsUnique();
