@@ -1,8 +1,12 @@
 ﻿using System.Data;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
+using Persistence.Context;
 
 namespace Application.User
 {
@@ -25,14 +29,54 @@ namespace Application.User
         
         public class Handler : IRequestHandler<Query, LoggedUserResource>
         {
-            public Handler()
+            private readonly SignInManager<Domain.Models.User> _signInManager;
+            private readonly UserManager<Domain.Models.User> _userManager;
+            private readonly IWebTokenGenerator _webTokenGenerator;
+
+            public Handler(SignInManager<Domain.Models.User> signInManager, UserManager<Domain.Models.User> userManager, IWebTokenGenerator webTokenGenerator)
             {
-                
+                _signInManager = signInManager;
+                _userManager = userManager;
+                _webTokenGenerator = webTokenGenerator;
             }
             
             public async Task<LoggedUserResource> Handle(Query request, CancellationToken cancellationToken)
             {
-                throw new System.NotImplementedException();
+                var user = await _userManager.FindByEmailAsync(request.Email);
+
+                if (user == null)
+                {
+                    throw new RestException(HttpStatusCode.Unauthorized, new
+                    {
+                        user = "Użytkownik nie istnieje!"
+                    });
+                }
+
+                var checkPassword = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+                var userRoles = await _userManager.GetRolesAsync(user);
+
+                if (userRoles.Count == 0)
+                {
+                    throw new RestException(HttpStatusCode.Unauthorized, new { user = "Użytkownik nie posiada przypisanej roli"});
+                }
+
+                if (!checkPassword.Succeeded)
+                {
+                    throw new RestException(HttpStatusCode.Unauthorized, new {user = "Niepoprawne dane logowania"});
+                }
+
+                return new LoggedUserResource
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    PhoneNumber = user.PhoneNumber,
+                    Email = user.Email,
+                    Image = user.Image,
+                    Role = userRoles[0],
+                    Token = _webTokenGenerator.CreateToken(user, userRoles[0])
+                };
             }
         }
     }
