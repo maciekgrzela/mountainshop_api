@@ -53,7 +53,6 @@ namespace API
             ConfigureServices(services);
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -119,7 +118,7 @@ namespace API
                         ValidateActor = true,
                         IssuerSigningKey = key,
                         ValidateAudience = false,
-                        ValidateIssuer = true,
+                        ValidateIssuer = false,
                         ValidateLifetime = true,
                         ClockSkew = TimeSpan.Zero,
                         RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
@@ -131,8 +130,7 @@ namespace API
                             var accessToken = context.Request.Query["access_token"];
                             var path = context.HttpContext.Request.Path;
 
-                            if (!string.IsNullOrEmpty(accessToken) &&
-                                (path.StartsWithSegments("/hub") || path.StartsWithSegments("/api")))
+                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hub"))
                             {
                                 context.Token = accessToken;
                             }
