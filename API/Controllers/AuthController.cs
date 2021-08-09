@@ -32,6 +32,14 @@ namespace API.Controllers
             return await _mediator.Send(query);
         }
 
+        [AllowAnonymous]
+        [HttpPost("register/facebook")]
+        public async Task<ActionResult<LoggedUserResource>> RegisterCustomerWithFacebook(FacebookLogin.Query query)
+        {
+            query.setRole("Customer");
+            return await _mediator.Send(query);
+        }
+
         [Authorize(Roles = "Owner,Admin")]
         [HttpPost("register/owner")]
         public async Task<ActionResult<LoggedUserResource>> RegisterOwnerAsync(Register.Query query)
