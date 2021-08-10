@@ -37,27 +37,21 @@ namespace API.Middleware
             switch (exception)
             {
                 case RestException re:
-                    logger.LogError(exception, "REST ERROR");
                     errors = re.Errors;
                     context.Response.StatusCode = (int) re.StatusCode;
                     break;
-                case Exception ex:
-                    logger.LogError(ex, "SERVER ERROR");
+                case { } ex:
                     errors = string.IsNullOrWhiteSpace(ex.Message) ? "Error" : ex.Message;
                     context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
                     break;
             }
 
             context.Response.ContentType = "application/json";
-            if (errors != null)
-            {
-                var results = JsonSerializer.Serialize(new
-                {
-                    errors
-                });
+            var results = JsonSerializer.Serialize(new {
+                errors
+            });
 
-                await context.Response.WriteAsync(results);
-            }
+            await context.Response.WriteAsync(results);
         }
     }
 }

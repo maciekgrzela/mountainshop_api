@@ -73,7 +73,7 @@ namespace Application.User
                 if (existing != null)
                 {
                     throw new RestException(HttpStatusCode.Unauthorized,
-                        new {user = "Użytkownik dla podanego adresu e-mail już istnieje"});
+                        new {info = "Użytkownik dla podanego adresu e-mail już istnieje"});
                 }
 
                 existing = await _userManager.FindByNameAsync(request.UserName);
@@ -81,7 +81,7 @@ namespace Application.User
                 if (existing != null)
                 {
                     throw new RestException(HttpStatusCode.Unauthorized,
-                        new {user = "Użytkownik dla podanego loginu już istnieje"});
+                        new {info = "Użytkownik dla podanego loginu już istnieje"});
                 }
 
                 var user = new Domain.Models.User
@@ -93,7 +93,7 @@ namespace Application.User
                     Email = request.Email,
                     PhoneNumber = request.PhoneNumber,
                     Role = request.getRole(),
-                    Comments = new List<Comment>()
+                    Comments = new List<Domain.Models.Comment>()
                 };
 
                 var result = await _userManager.CreateAsync(user);
@@ -101,7 +101,7 @@ namespace Application.User
                 if (!result.Succeeded)
                 {
                     throw new RestException(HttpStatusCode.Unauthorized,
-                        new {user = "Użytkownik dla podanego loginu już istnieje"});
+                        new {info = "Użytkownik dla podanego loginu już istnieje"});
                 }
 
                 await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, request.getRole()));

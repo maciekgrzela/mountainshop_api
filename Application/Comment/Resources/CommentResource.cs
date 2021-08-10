@@ -1,15 +1,13 @@
 ﻿using System;
 
-namespace Domain.Models
+namespace Application.Comment.Resources
 {
-    public class Comment
+    public class CommentResource
     {
         public Guid Id { get; set; }
         public string Content { get; set; }
-        public string UserId { get; set; }
-        public User User { get; set; }
-        public Guid ProductId { get; set; }
-        public Product Product { get; set; }
+        public UserForCommentsResource User { get; set; }
+        public ProductForCommentsResource Product { get; set; }
         public DateTime Created { get; set; }
         public double Rate { get; set; }
         public int Likes { get; set; }

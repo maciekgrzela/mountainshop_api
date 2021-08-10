@@ -142,6 +142,7 @@ namespace API
                 });
 
             services.AddScoped<IWebTokenGenerator, WebTokenGenerator>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddMediatR(typeof(Login.Handler).Assembly);
             services.AddAutoMapper(typeof(Login.Handler));
         }
