@@ -40,6 +40,20 @@ namespace API.Controllers
             return NoContent();
         }
 
+        [HttpPatch("{id}/like")]
+        public async Task<ActionResult> LikeCommentAsync(Guid id)
+        {
+            await _mediator.Send(new ModifyCommentsPopularity.Command {Id = id, Vote = "like"});
+            return NoContent();
+        }
+        
+        [HttpPatch("{id}/dislike")]
+        public async Task<ActionResult> DislikeCommentAsync(Guid id)
+        {
+            await _mediator.Send(new ModifyCommentsPopularity.Command {Id = id, Vote = "dislike"});
+            return NoContent();
+        }
+
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateAsync(Guid id, UpdateComment.Command data)
         {
