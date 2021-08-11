@@ -57,12 +57,12 @@ namespace Application.User
 
                 if (userRoles.Count == 0)
                 {
-                    throw new RestException(HttpStatusCode.Unauthorized, new { user = "Użytkownik nie posiada przypisanej roli"});
+                    throw new RestException(HttpStatusCode.Unauthorized, new { info = "Użytkownik nie posiada przypisanej roli"});
                 }
 
                 if (!checkPassword.Succeeded)
                 {
-                    throw new RestException(HttpStatusCode.Unauthorized, new {user = "Niepoprawne dane logowania"});
+                    throw new RestException(HttpStatusCode.Unauthorized, new {info = "Niepoprawne dane logowania"});
                 }
 
                 return new LoggedUserResource

@@ -1,4 +1,5 @@
-﻿using Application.User;
+﻿using Application.Category;
+using Application.User;
 using AutoMapper;
 
 namespace Application.Mapping
@@ -8,6 +9,7 @@ namespace Application.Mapping
         public ModelToResourceProfile()
         {
             CreateMap<Domain.Models.User, LoggedUserResource>();
+            CreateMap<Domain.Models.Category, CategoryResource>();
         }
     }
 }
