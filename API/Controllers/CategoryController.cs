@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Category;
+using Application.Product;
+using Application.Product.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +31,12 @@ namespace API.Controllers
         public async Task<ActionResult<CategoryResource>> GetAsync(Guid id)
         {
             return await _mediator.Send(new GetCategory.Query{Id = id});
+        }
+        
+        [HttpGet("{id}/products")]
+        public async Task<ActionResult<List<ProductResource>>> GetProductsForCategoryAsync(Guid id)
+        {
+            return await _mediator.Send(new GetProductsForCategory.Query{Id = id});
         }
 
         [HttpPost]
