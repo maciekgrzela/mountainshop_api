@@ -48,7 +48,7 @@ namespace Application.Producer
                     Name = request.Name,
                     Description = request.Description,
                     PathImage = request.PathImage,
-                    Products = new List<Product>()
+                    Products = new List<Domain.Models.Product>()
                 };
 
                 await _context.Producers.AddAsync(producer, cancellationToken);
