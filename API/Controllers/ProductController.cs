@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Application.Category;
 using Application.Comment;
 using Application.Comment.Resources;
 using Application.Product;
@@ -66,6 +67,12 @@ namespace API.Controllers
         public async Task<ActionResult<List<CommentResource>>> GetCommentsForProductAsync(Guid id)
         {
             return await _mediator.Send(new GetCommentsForProduct.Query {Id = id});
+        }
+        
+        [HttpGet("{id}/categories")]
+        public async Task<ActionResult<List<CategoryResource>>> GetCategoriesForProductAsync(Guid id)
+        {
+            return await _mediator.Send(new GetCategoriesForProduct.Query {Id = id});
         }
     }
 }
