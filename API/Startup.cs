@@ -22,6 +22,7 @@ using Microsoft.OpenApi.Models;
 using Domain.Models;
 using Persistence.Context;
 using Security;
+using Stripe;
 
 namespace API
 {
@@ -151,6 +152,7 @@ namespace API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<ErrorHandlingMiddleware>();
+            StripeConfiguration.ApiKey = Configuration.GetSection("StripeApiKey").Value;
             if (env.IsDevelopment())
             {
                 //app.UseDeveloperExceptionPage();
