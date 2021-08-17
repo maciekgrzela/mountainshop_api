@@ -1,20 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Complaint.Params;
 using Application.Complaint.Resources;
 using AutoMapper;
-using Domain.Models;
+using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 
-namespace Application.Compliant
+namespace Application.Complaint
 {
-    public class GetAllCompliants
+    public class GetAllComplaints
     {
-        public class Query : IRequest<List<ComplaintResource>> { }
+        public class Query : IRequest<PagedList<ComplaintResource>>
+        {
+            public ComplaintParams QueryParams { get; set; }
+        }
 
-        public class Handler : IRequestHandler<Query, List<ComplaintResource>>
+        public class Handler : IRequestHandler<Query, PagedList<ComplaintResource>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -26,12 +31,31 @@ namespace Application.Compliant
             }
             
             
-            public async Task<List<ComplaintResource>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<PagedList<ComplaintResource>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var complaints = await _context.Complaints.ToListAsync(cancellationToken);
-                var complaintsResource = _mapper.Map<List<Domain.Models.Complaint>, List<ComplaintResource>>(complaints);
+                var complaints = _context.Complaints
+                                                    .Include(p => p.Order)
+                                                    .ProjectTo<ComplaintResource>(_mapper.ConfigurationProvider)
+                                                    .AsQueryable();
 
-                return complaintsResource;
+                complaints = FilterByOrderId(complaints, request.QueryParams);
+
+
+                var complaintsList = await PagedList<ComplaintResource>.ToPagedListAsync(complaints,
+                    request.QueryParams.PageNumber, request.QueryParams.PageSize);
+
+                return complaintsList;
+            }
+
+            private static IQueryable<ComplaintResource> FilterByOrderId(IQueryable<ComplaintResource> complaints, ComplaintParams requestQueryParams)
+            {
+                if (requestQueryParams.OrderId != Guid.Empty)
+                {
+                    complaints = complaints.Where(p =>
+                        p.Order.Id.ToString().Equals(requestQueryParams.OrderId.ToString()));
+                }
+
+                return complaints;
             }
         }
     }

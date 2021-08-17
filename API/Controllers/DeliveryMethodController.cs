@@ -2,39 +2,33 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.DeliveryMethod;
+using Application.DeliveryMethod.Params;
 using Application.DeliveryMethod.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [ApiController]
     [Route("api/delivery")]
-    public class DeliveryMethodController : ControllerBase
+    public class DeliveryMethodController : BaseController
     {
-        private readonly IMediator _mediator;
-
-        public DeliveryMethodController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-        
         [HttpGet]
-        public async Task<ActionResult<List<DeliveryMethodResource>>> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync([FromQuery] DeliveryMethodParams queryParams)
         {
-            return await _mediator.Send(new GetAllDeliveryMethods.Query());
+            var deliveryMethods = await Mediator.Send(new GetAllDeliveryMethods.Query { QueryParams = queryParams });
+            return HandlePaginationHeader(deliveryMethods);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<DeliveryMethodResource>> GetAsync(Guid id)
         {
-            return await _mediator.Send(new GetDeliveryMethod.Query{Id = id});
+            return await Mediator.Send(new GetDeliveryMethod.Query{Id = id});
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateAsync(CreateDeliveryMethod.Command data)
         {
-            await _mediator.Send(data);
+            await Mediator.Send(data);
             return NoContent();
         }
 
@@ -42,14 +36,14 @@ namespace API.Controllers
         public async Task<ActionResult> UpdateAsync(Guid id, UpdateDeliveryMethod.Command data)
         {
             data.SetId(id);
-            await _mediator.Send(data);
+            await Mediator.Send(data);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(Guid id)
         {
-            await _mediator.Send(new DeleteDeliveryMethod.Command { Id = id });
+            await Mediator.Send(new DeleteDeliveryMethod.Command { Id = id });
             return NoContent();
         }
         

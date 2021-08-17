@@ -26,7 +26,7 @@ namespace Application.Product
             
             public async Task<List<ProductResource>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var products = await _context.Products.ToListAsync(cancellationToken: cancellationToken);
+                var products = await _context.Products.Include(p => p.Producer).ToListAsync(cancellationToken: cancellationToken);
                 var productsResource = _mapper.Map<List<Domain.Models.Product>, List<ProductResource>>(products);
 
                 return productsResource;

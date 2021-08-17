@@ -2,39 +2,33 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.PaymentMethod;
+using Application.PaymentMethod.Params;
 using Application.PaymentMethod.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [ApiController]
     [Route("api/payment")]
-    public class PaymentMethodController : ControllerBase
+    public class PaymentMethodController : BaseController
     {
-        private readonly IMediator _mediator;
-
-        public PaymentMethodController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-        
         [HttpGet]
-        public async Task<ActionResult<List<PaymentMethodResource>>> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync([FromQuery] PaymentMethodParams queryParams)
         {
-            return await _mediator.Send(new GetAllPaymentMethods.Query());
+            var payments = await Mediator.Send(new GetAllPaymentMethods.Query{QueryParams = queryParams });
+            return HandlePaginationHeader(payments);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<PaymentMethodResource>> GetAsync(Guid id)
         {
-            return await _mediator.Send(new GetPaymentMethod.Query{Id = id});
+            return await Mediator.Send(new GetPaymentMethod.Query{Id = id});
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateAsync(CreatePaymentMethod.Command data)
         {
-            await _mediator.Send(data);
+            await Mediator.Send(data);
             return NoContent();
         }
 
@@ -42,14 +36,14 @@ namespace API.Controllers
         public async Task<ActionResult> UpdateAsync(Guid id, UpdatePaymentMethod.Command data)
         {
             data.SetId(id);
-            await _mediator.Send(data);
+            await Mediator.Send(data);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(Guid id)
         {
-            await _mediator.Send(new DeletePaymentMethod.Command { Id = id });
+            await Mediator.Send(new DeletePaymentMethod.Command { Id = id });
             return NoContent();
         }
     }

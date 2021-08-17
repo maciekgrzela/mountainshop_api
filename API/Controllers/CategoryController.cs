@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Application;
 using Application.Category;
 using Application.Product;
 using Application.Product.Resources;
@@ -10,39 +11,32 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [ApiController]
     [Route("api/categories")]
-    public class CategoryController : ControllerBase
+    public class CategoryController : BaseController
     {
-        private readonly IMediator _mediator;
-
-        public CategoryController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         [HttpGet]
-        public async Task<ActionResult<List<CategoryResource>>> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync([FromQuery] PagingParams queryParams)
         {
-            return await _mediator.Send(new GetAllCategories.Query());
+            var categories = await Mediator.Send(new GetAllCategories.Query{ QueryParams = queryParams});
+            return HandlePaginationHeader(categories);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryResource>> GetAsync(Guid id)
         {
-            return await _mediator.Send(new GetCategory.Query{Id = id});
+            return await Mediator.Send(new GetCategory.Query{Id = id});
         }
         
         [HttpGet("{id}/products")]
         public async Task<ActionResult<List<ProductResource>>> GetProductsForCategoryAsync(Guid id)
         {
-            return await _mediator.Send(new GetProductsForCategory.Query{Id = id});
+            return await Mediator.Send(new GetProductsForCategory.Query{Id = id});
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateAsync(CreateCategory.Command data)
         {
-            await _mediator.Send(data);
+            await Mediator.Send(data);
             return NoContent();
         }
 
@@ -50,14 +44,14 @@ namespace API.Controllers
         public async Task<ActionResult> UpdateAsync(Guid id, UpdateCategory.Command data)
         {
             data.SetId(id);
-            await _mediator.Send(data);
+            await Mediator.Send(data);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(Guid id)
         {
-            await _mediator.Send(new DeleteCategory.Command { Id = id });
+            await Mediator.Send(new DeleteCategory.Command { Id = id });
             return NoContent();
         }
     }
