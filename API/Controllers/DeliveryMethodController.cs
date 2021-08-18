@@ -5,6 +5,7 @@ using Application.DeliveryMethod;
 using Application.DeliveryMethod.Params;
 using Application.DeliveryMethod.Resources;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -13,6 +14,7 @@ namespace API.Controllers
     public class DeliveryMethodController : BaseController
     {
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllAsync([FromQuery] DeliveryMethodParams queryParams)
         {
             var deliveryMethods = await Mediator.Send(new GetAllDeliveryMethods.Query { QueryParams = queryParams });

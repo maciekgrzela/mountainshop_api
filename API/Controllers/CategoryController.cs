@@ -7,6 +7,7 @@ using Application.Category;
 using Application.Product;
 using Application.Product.Resources;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -15,6 +16,7 @@ namespace API.Controllers
     public class CategoryController : BaseController
     {
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllAsync([FromQuery] PagingParams queryParams)
         {
             var categories = await Mediator.Send(new GetAllCategories.Query{ QueryParams = queryParams});

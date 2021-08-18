@@ -5,6 +5,7 @@ using Application.PaymentMethod;
 using Application.PaymentMethod.Params;
 using Application.PaymentMethod.Resources;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -13,6 +14,7 @@ namespace API.Controllers
     public class PaymentMethodController : BaseController
     {
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllAsync([FromQuery] PaymentMethodParams queryParams)
         {
             var payments = await Mediator.Send(new GetAllPaymentMethods.Query{QueryParams = queryParams });

@@ -8,21 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [ApiController]
     [Route("api/users")]
-    public class UserController : ControllerBase
+    public class UserController : BaseController
     {
-        private readonly IMediator _mediator;
-
-        public UserController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         [HttpGet("{id}/comments")]
         public async Task<ActionResult<List<CommentResource>>> GetCommentsForUserAsync(string id)
         {
-            return await _mediator.Send(new GetCommentsForUser.Query {Id = id});
+            return await Mediator.Send(new GetCommentsForUser.Query {Id = id});
         }
     }
 }

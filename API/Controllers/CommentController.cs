@@ -16,6 +16,7 @@ namespace API.Controllers
     public class CommentController : BaseController
     {
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllAsync([FromQuery] CommentParams queryParams)
         {
             var comments = await Mediator.Send(new GetAllComments.Query{ QueryParams = queryParams });
