@@ -5,8 +5,8 @@ using Application.Category;
 using Application.Comment;
 using Application.Comment.Resources;
 using Application.Product;
+using Application.Product.Params;
 using Application.Product.Resources;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,9 +17,10 @@ namespace API.Controllers
     {
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<List<ProductResource>>> GetAllProductsAsync()
+        public async Task<ActionResult<List<ProductResource>>> GetAllProductsAsync([FromQuery] ProductParams queryParams)
         {
-            return await Mediator.Send(new GetAllProducts.Query());
+            var products = await Mediator.Send(new GetAllProducts.Query {QueryParams = queryParams});
+            return HandlePaginationHeader(products);
         }
 
         [HttpGet("{id}")]
@@ -61,12 +62,6 @@ namespace API.Controllers
         public async Task<ActionResult<List<CommentResource>>> GetCommentsForProductAsync(Guid id)
         {
             return await Mediator.Send(new GetCommentsForProduct.Query {Id = id});
-        }
-        
-        [HttpGet("{id}/categories")]
-        public async Task<ActionResult<List<CategoryResource>>> GetCategoriesForProductAsync(Guid id)
-        {
-            return await Mediator.Send(new GetCategoriesForProduct.Query {Id = id});
         }
     }
 }

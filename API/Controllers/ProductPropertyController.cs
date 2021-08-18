@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.ProductsProperty;
+using Application.ProductsProperty.Params;
 using Application.ProductsProperty.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -14,9 +15,10 @@ namespace API.Controllers
     {
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<List<ProductsPropertyResource>>> GetAllAsync()
+        public async Task<ActionResult<List<ProductsPropertyResource>>> GetAllAsync([FromQuery] ProductsPropertyParams queryParams)
         {
-            return await Mediator.Send(new GetAllProductsProperties.Query());
+            var productsProperties = await Mediator.Send(new GetAllProductsProperties.Query{ QueryParams = queryParams});
+            return HandlePaginationHeader(productsProperties);
         }
 
         [HttpGet("{id}")]

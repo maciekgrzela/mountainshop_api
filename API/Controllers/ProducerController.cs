@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Producer;
+using Application.Producer.Params;
 using Application.Producer.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -14,9 +15,10 @@ namespace API.Controllers
     {
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<List<ProducerResource>>> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync([FromQuery] ProducerParams queryParams)
         {
-            return await Mediator.Send(new GetAllProducers.Query());
+            var producers = await Mediator.Send(new GetAllProducers.Query{ QueryParams = queryParams });
+            return HandlePaginationHeader(producers);
         }
 
         [HttpGet("{id}")]

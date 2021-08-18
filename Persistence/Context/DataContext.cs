@@ -19,7 +19,6 @@ namespace Persistence.Context
         public DbSet<OrderDetails> OrderDetails { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<Producer> Producers { get; set; }
-        public DbSet<ProductsCategories> ProductsCategories { get; set; }
         public DbSet<ProductsOrders> ProductsOrders { get; set; }
         public DbSet<Comment> Comments { get; set; }
 

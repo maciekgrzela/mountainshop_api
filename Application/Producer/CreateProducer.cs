@@ -15,7 +15,6 @@ namespace Application.Producer
         {
             public string Name { get; set; }
             public string Description { get; set; }
-            public string PathImage { get; set; }
         }
         
         public class CommandValidator : AbstractValidator<Command>
@@ -23,7 +22,6 @@ namespace Application.Producer
             public CommandValidator()
             {
                 RuleFor(p => p.Name).NotEmpty();
-                RuleFor(p => p.PathImage).NotEmpty();
                 RuleFor(p => p.Description).NotEmpty();
             }
         }
@@ -47,7 +45,6 @@ namespace Application.Producer
                     Id = Guid.NewGuid(),
                     Name = request.Name,
                     Description = request.Description,
-                    PathImage = request.PathImage,
                     Products = new List<Domain.Models.Product>()
                 };
 

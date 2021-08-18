@@ -13,7 +13,6 @@ namespace Application.Category
         public class Command : IRequest
         {
             public string Name { get; set; }
-            public string ImagePath { get; set; }
             public string Description { get; set; }
         }
 
@@ -22,7 +21,6 @@ namespace Application.Category
             public CommandValidator()
             {
                 RuleFor(p => p.Name).NotEmpty();
-                RuleFor(p => p.ImagePath).NotEmpty();
                 RuleFor(p => p.Description).NotEmpty();
             }
         }
@@ -44,7 +42,6 @@ namespace Application.Category
                 {
                     Id = Guid.NewGuid(),
                     Description = request.Description,
-                    ImagePath = request.ImagePath,
                     Name = request.Name
                 };
 

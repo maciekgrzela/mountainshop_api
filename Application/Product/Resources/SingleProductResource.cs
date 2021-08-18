@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Application.Product.Resources
 {
-    public class ProductResource
+    public class SingleProductResource
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -15,5 +15,7 @@ namespace Application.Product.Resources
         public int MinimalOrderedAmount { get; set; }
         public ProducerForProductResource Producer { get; set; }
         public CategoryForProductResource Category { get; set; }
+        public List<PropertyValueForProductResource> ProductsPropertyValues { get; set; }
+        public List<CommentForProductResource> Comments { get; set; }
     }
 }

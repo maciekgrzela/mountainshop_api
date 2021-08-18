@@ -28,12 +28,6 @@ namespace API.Controllers
         {
             return await Mediator.Send(new GetCategory.Query{Id = id});
         }
-        
-        [HttpGet("{id}/products")]
-        public async Task<ActionResult<List<ProductResource>>> GetProductsForCategoryAsync(Guid id)
-        {
-            return await Mediator.Send(new GetProductsForCategory.Query{Id = id});
-        }
 
         [HttpPost]
         public async Task<ActionResult> CreateAsync(CreateCategory.Command data)

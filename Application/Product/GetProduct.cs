@@ -7,6 +7,7 @@ using Application.Product.Resources;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 
 namespace Application.Product
@@ -40,7 +41,12 @@ namespace Application.Product
             
             public async Task<ProductResource> Handle(Query request, CancellationToken cancellationToken)
             {
-                var existingProduct = await _context.Products.FindAsync(request.Id);
+                var existingProduct = await _context.Products
+                    .Include(p => p.Category)
+                    .Include(p => p.Comments)
+                    .Include(p => p.Producer)
+                    .Include(p => p.ProductsPropertyValues)
+                    .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
 
                 if (existingProduct == null)
                 {

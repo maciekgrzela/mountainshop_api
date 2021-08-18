@@ -5,6 +5,7 @@ using Application.Producer.Resources;
 using Application.Product.Resources;
 using Application.User;
 using AutoMapper;
+using Domain.Models;
 
 namespace Application.Mapping
 {
@@ -23,6 +24,11 @@ namespace Application.Mapping
             CreateMap<Domain.Models.Product, ProductForCommentsResource>();
             CreateMap<Domain.Models.Complaint, ComplaintResource>();
             CreateMap<Domain.Models.Order, OrderForComplaintResource>();
+            CreateMap<Domain.Models.Category, CategoryForProductResource>();
+            CreateMap<Domain.Models.Comment, CommentForProductResource>();
+            CreateMap<ProductsPropertyValue, PropertyValueForProductResource>();
+            CreateMap<Domain.Models.Product, SingleProductResource>();
+            CreateMap<Domain.Models.User, UserForProductsCommentResource>();
         }
     }
 }

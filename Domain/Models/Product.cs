@@ -28,6 +28,10 @@ namespace Domain.Models
         public Guid ProducerId { get; set; }
         [Required]
         public Producer Producer { get; set; }
+        [Required]
+        public Guid CategoryId { get; set; }
+        [Required]
+        public Category Category { get; set; }
         public List<Comment> Comments { get; set; }
     }
 }
