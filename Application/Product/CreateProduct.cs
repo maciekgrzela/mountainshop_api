@@ -5,9 +5,11 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
+using Application.Photo;
 using AutoMapper;
 using Domain.Models;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 
@@ -37,12 +39,14 @@ namespace Application.Product
         {
             private readonly DataContext _context;
             private readonly IUnitOfWork _unitOfWork;
+            private readonly IPhotoAccessor _photoAccessor;
             private readonly IMapper _mapper;
 
-            public Handler(DataContext context, IUnitOfWork unitOfWork, IMapper mapper)
+            public Handler(DataContext context, IUnitOfWork unitOfWork, IPhotoAccessor photoAccessor, IMapper mapper)
             {
                 _context = context;
                 _unitOfWork = unitOfWork;
+                _photoAccessor = photoAccessor;
                 _mapper = mapper;
             }
 

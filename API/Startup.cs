@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Middleware;
 using Application;
+using Application.Photo;
 using Application.User;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,6 +21,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Domain.Models;
+using Infrastructure.Photos;
 using Persistence.Context;
 using Security;
 using Stripe;
@@ -142,8 +144,10 @@ namespace API
                     };
                 });
 
+            services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
             services.AddScoped<IWebTokenGenerator, WebTokenGenerator>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             services.AddMediatR(typeof(Login.Handler).Assembly);
             services.AddAutoMapper(typeof(Login.Handler));
         }

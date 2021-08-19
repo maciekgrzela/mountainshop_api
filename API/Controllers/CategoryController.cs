@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Application;
 using Application.Category;
-using Application.Product;
-using Application.Product.Resources;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,7 +25,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateAsync(CreateCategory.Command data)
+        public async Task<ActionResult> CreateAsync([FromForm] CreateCategory.Command data)
         {
             await Mediator.Send(data);
             return NoContent();

@@ -13,6 +13,7 @@ namespace Domain.Models
         public string Name { get; set; }
         [MaxLength(2000)]
         public string Description { get; set; }
+        public string Image { get; set; }
         public List<ProductsPropertyValue> ProductsPropertyValues { get; set; }
         [Required, Range(0, int.MaxValue)]
         public int AmountInStorage { get; set; }

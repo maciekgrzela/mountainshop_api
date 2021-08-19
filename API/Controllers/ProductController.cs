@@ -8,6 +8,7 @@ using Application.Product;
 using Application.Product.Params;
 using Application.Product.Resources;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -31,6 +32,13 @@ namespace API.Controllers
         
         [HttpPost]
         public async Task<ActionResult> CreateProductAsync(CreateProduct.Command data)
+        {
+            await Mediator.Send(data);
+            return NoContent();
+        }
+        
+        [HttpPost("photo/upload")]
+        public async Task<ActionResult> UploadPhotoAsync([FromForm] UploadProductsImage.Command data)
         {
             await Mediator.Send(data);
             return NoContent();

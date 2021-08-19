@@ -28,7 +28,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateAsync(CreateProducer.Command data)
+        public async Task<ActionResult> CreateAsync([FromForm] CreateProducer.Command data)
         {
             await Mediator.Send(data);
             return NoContent();
