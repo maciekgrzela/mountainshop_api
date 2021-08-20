@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,24 +36,83 @@ namespace Application.Product
                 var products = _context.Products
                     .Include(p => p.Producer)
                     .Include(p => p.Category)
-                    .ProjectTo<ProductResource>(_mapper.ConfigurationProvider)
+                    .Include(p => p.Comments)
+                    .OrderByDescending(p => p.Created)
+                    .ProjectTo<ProductWithCommentsResource>(_mapper.ConfigurationProvider)
                     .AsQueryable();
 
                 products = FilterByName(products, request.QueryParams);
                 products = FilterByDescription(products, request.QueryParams);
+                products = FilterByGender(products, request.QueryParams);
                 products = FilterByAmountInStorage(products, request.QueryParams);
                 products = FilterByGrossPrice(products, request.QueryParams);
-                products = FilterByProducerId(products, request.QueryParams);
+                products = FilterByProducerIds(products, request.QueryParams);
                 products = FilterByCategoryId(products, request.QueryParams);
+                products = FilterBySale(products, request.QueryParams);
+                products = FilterByDate(products, request.QueryParams);
+                products = await FilterByCommentsRating(products, request.QueryParams);
+                products = await FilterByCommentsCount(products, request.QueryParams);
                 products = SortByGrossPrice(products, request.QueryParams);
 
-                var productsList = await PagedList<ProductResource>.ToPagedListAsync(products, request.QueryParams.PageNumber,
-                    request.QueryParams.PageSize);
+                var productsList = await products.ToListAsync(cancellationToken: cancellationToken);
+                var resourcesList = _mapper.Map<List<ProductWithCommentsResource>, List<ProductResource>>(productsList);
                 
-                return productsList;
+                var productsResources = PagedList<ProductResource>.ToPagedList(resourcesList, request.QueryParams.PageNumber, request.QueryParams.PageSize);
+                
+                return productsResources;
             }
 
-            private IQueryable<ProductResource> FilterByCategoryId(IQueryable<ProductResource> products, ProductParams requestQueryParams)
+            private async Task<IQueryable<ProductWithCommentsResource>> FilterByCommentsCount(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
+            {
+                if (requestQueryParams.CommentsCountDesc != null)
+                {
+                    products = products.OrderByDescending(p => p.Comments.Count);
+                }
+
+                return products;
+            }
+
+            private async Task<IQueryable<ProductWithCommentsResource>> FilterByCommentsRating(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
+            {
+                if (requestQueryParams.BestRatingDesc != null)
+                {
+                    products = products.OrderByDescending(p => p.Comments.Average(c => c.Rate));
+                }
+
+                return products;
+            }
+
+            private IQueryable<ProductWithCommentsResource> FilterByGender(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
+            {
+                if (requestQueryParams.GenderFilter != null && requestQueryParams.GenderFilter.Count > 0)
+                {
+                    products = products.Where(p => requestQueryParams.GenderFilter.Contains(p.Gender));
+                }
+
+                return products;
+            }
+
+            private IQueryable<ProductWithCommentsResource> FilterByDate(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
+            {
+                if (requestQueryParams.TheNewFilter != null)
+                {
+                    products = products.Where(p => DateTime.Now.AddDays(-30).CompareTo(p.Created) <= 0);
+                }
+
+                return products;
+            }
+
+            private IQueryable<ProductWithCommentsResource> FilterBySale(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
+            {
+                if (requestQueryParams.SaleFilter != null)
+                {
+                    products = products.Where(p => p.PercentageSale != null);
+                }
+
+                return products;
+            }
+
+            private IQueryable<ProductWithCommentsResource> FilterByCategoryId(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
             {
                 if (requestQueryParams.CategoryId != Guid.Empty)
                 {
@@ -62,7 +122,7 @@ namespace Application.Product
                 return products;
             }
 
-            private IQueryable<ProductResource> SortByGrossPrice(IQueryable<ProductResource> products, ProductParams requestQueryParams)
+            private IQueryable<ProductWithCommentsResource> SortByGrossPrice(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
             {
                 if (requestQueryParams.GrossPriceAsc != null)
                 {
@@ -77,17 +137,17 @@ namespace Application.Product
                 return products;
             }
 
-            private IQueryable<ProductResource> FilterByProducerId(IQueryable<ProductResource> products, ProductParams requestQueryParams)
+            private IQueryable<ProductWithCommentsResource> FilterByProducerIds(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
             {
-                if (requestQueryParams.ProducerId != Guid.Empty)
+                if (requestQueryParams.ProducerIds != null && requestQueryParams.ProducerIds.Count > 0)
                 {
-                    products = products.Where(p => p.Producer.Id.ToString().Equals(requestQueryParams.ProducerId.ToString()));
+                    products = products.Where(p => string.Join(" ", requestQueryParams.ProducerIds).Contains(p.Producer.Id.ToString()));
                 }
 
                 return products;
             }
 
-            private IQueryable<ProductResource> FilterByGrossPrice(IQueryable<ProductResource> products, ProductParams requestQueryParams)
+            private IQueryable<ProductWithCommentsResource> FilterByGrossPrice(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
             {
                 if (requestQueryParams.GrossPriceMinFilter != null)
                 {
@@ -102,17 +162,17 @@ namespace Application.Product
                 return products;
             }
 
-            private IQueryable<ProductResource> FilterByAmountInStorage(IQueryable<ProductResource> products, ProductParams requestQueryParams)
+            private IQueryable<ProductWithCommentsResource> FilterByAmountInStorage(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
             {
                 if (requestQueryParams.AmountInStorageConstraint != null)
                 {
-                    products = products.Where(p => p.AmountInStorage <= requestQueryParams.AmountInStorageConstraint);
+                    products = products.Where(p => p.AmountInStorage >= requestQueryParams.AmountInStorageConstraint);
                 }
 
                 return products;
             }
 
-            private IQueryable<ProductResource> FilterByDescription(IQueryable<ProductResource> products, ProductParams requestQueryParams)
+            private IQueryable<ProductWithCommentsResource> FilterByDescription(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
             {
                 if (!string.IsNullOrWhiteSpace(requestQueryParams.DescriptionFilter))
                 {
@@ -122,7 +182,7 @@ namespace Application.Product
                 return products;
             }
 
-            private IQueryable<ProductResource> FilterByName(IQueryable<ProductResource> products, ProductParams requestQueryParams)
+            private IQueryable<ProductWithCommentsResource> FilterByName(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
             {
                 if (!string.IsNullOrWhiteSpace(requestQueryParams.NameFilter))
                 {
@@ -131,6 +191,27 @@ namespace Application.Product
 
                 return products;
             }
+        }
+    }
+
+    internal class RatingsComparer : IComparer<ProductResource>
+    {
+        private readonly List<Guid> _ratingGuids;
+
+        public RatingsComparer(List<Guid> ratingGuids)
+        {
+            _ratingGuids = ratingGuids;
+        }
+
+        public int Compare(ProductResource? x, ProductResource? y)
+        {
+            if (x == null || y == null) return 0;
+            
+            var xPosition = _ratingGuids.IndexOf(x.Id);
+            var yPosition = _ratingGuids.IndexOf(y.Id);
+
+            return xPosition - yPosition;
+
         }
     }
 }

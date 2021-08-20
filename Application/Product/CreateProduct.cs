@@ -27,6 +27,7 @@ namespace Application.Product
             public double PercentageTax { get; set; }
             public int MinimalOrderedAmount { get; set; }
             public Guid ProducerId { get; set; }
+            public Guid CategoryId { get; set; }
         }
         
         public class ProductsPropertyCommand
@@ -60,6 +61,14 @@ namespace Application.Product
                         new {info = "Nie znaleziono producenta dla podanego identyfikatora"});
                 }
 
+                var category = await _context.Categories.FindAsync(request.CategoryId);
+
+                if (category == null)
+                {
+                    throw new RestException(HttpStatusCode.NotFound,
+                        new {info = "Nie znaleziono kategorii dla podanego identyfikatora"});
+                }
+
                 var existingPropertiesIds = await _context.ProductsProperties.Select(p => p.Id).ToListAsync(cancellationToken: cancellationToken);
                 var propertiesIds = request.ProductsPropertyValues.Select(p => p.ProductsPropertyId).ToList();
 
@@ -81,9 +90,10 @@ namespace Application.Product
                     Comments = new List<Domain.Models.Comment>(),
                     Description = request.Description,
                     Producer = producer,
+                    Category = category,
                     NetPrice = request.NetPrice,
                     PercentageTax = request.PercentageTax,
-                    GrossPrice = request.NetPrice + (request.NetPrice * request.PercentageTax),
+                    GrossPrice = request.NetPrice + (request.NetPrice * (request.PercentageTax / 100)),
                     MinimalOrderedAmount = request.MinimalOrderedAmount,
                     ProductsPropertyValues = productsPropertyValues,
                 };

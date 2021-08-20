@@ -25,6 +25,8 @@ namespace Domain.Models
         public double GrossPrice { get; set; }
         [Required, Range(0, int.MaxValue)]
         public int MinimalOrderedAmount { get; set; }
+        public double? PercentageSale { get; set; }
+        public string Gender { get; set; }
         [Required]
         public Guid ProducerId { get; set; }
         [Required]
@@ -34,5 +36,6 @@ namespace Domain.Models
         [Required]
         public Category Category { get; set; }
         public List<Comment> Comments { get; set; }
+        public DateTime Created { get; set; }
     }
 }

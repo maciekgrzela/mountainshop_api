@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
 {
@@ -14,6 +18,7 @@ namespace Application
         public int TotalCount { get; set; }
 
         public PagedList() { }
+        
         public PagedList(IEnumerable<T> items, int count, int pageSize, int pageNumber)
         {
             PageSize = pageSize;
@@ -27,6 +32,13 @@ namespace Application
         {
             var count = await source.CountAsync();
             var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            return new PagedList<T>(items, count, pageSize, pageNumber);
+        }
+        
+        public static PagedList<T> ToPagedList(IEnumerable<T> source, int pageNumber, int pageSize)
+        {
+            var count = source.Count();
+            var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
             return new PagedList<T>(items, count, pageSize, pageNumber);
         }
     }

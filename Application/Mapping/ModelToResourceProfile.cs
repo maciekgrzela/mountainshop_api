@@ -1,4 +1,5 @@
-﻿using Application.Category;
+﻿using System.Linq;
+using Application.Category;
 using Application.Comment.Resources;
 using Application.Complaint.Resources;
 using Application.Producer.Resources;
@@ -29,6 +30,8 @@ namespace Application.Mapping
             CreateMap<ProductsPropertyValue, PropertyValueForProductResource>();
             CreateMap<Domain.Models.Product, SingleProductResource>();
             CreateMap<Domain.Models.User, UserForProductsCommentResource>();
+            CreateMap<Domain.Models.Product, ProductWithCommentsResource>();
+            CreateMap<ProductWithCommentsResource, ProductResource>();
         }
     }
 }

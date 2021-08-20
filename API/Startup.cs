@@ -69,6 +69,7 @@ namespace API
                     policy
                         .AllowAnyHeader()
                         .AllowAnyMethod()
+                        .WithExposedHeaders("Pagination")
                         .WithExposedHeaders("WWW-Authenticate")
                         .WithOrigins(Configuration.GetSection("ClientAppUrl").Value)
                         .AllowCredentials();

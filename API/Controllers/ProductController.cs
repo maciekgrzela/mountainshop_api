@@ -51,6 +51,14 @@ namespace API.Controllers
             return NoContent();
         }
 
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> SetProductsSaleAsync(Guid id, SetProductsSale.Command data)
+        {
+            data.SetId(id);
+            await Mediator.Send(data);
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteProductAsync(Guid id)
         {
