@@ -16,6 +16,7 @@ namespace Application.Comment
         public class Command : IRequest
         {
             public string Content { get; set; }
+            public string Title { get; set; }
             public string UserId { get; set; }
             public Guid ProductId { get; set; }
             public double Rate { get; set; }
@@ -26,6 +27,7 @@ namespace Application.Comment
             public CommandValidator()
             {
                 RuleFor(p => p.Content).NotEmpty();
+                RuleFor(p => p.Title).NotEmpty();
                 RuleFor(p => p.Rate).GreaterThanOrEqualTo(0).LessThanOrEqualTo(5);
                 RuleFor(p => p.UserId).NotEmpty();
                 RuleFor(p => p.ProductId).NotEmpty();

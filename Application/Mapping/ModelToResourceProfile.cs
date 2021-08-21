@@ -4,6 +4,7 @@ using Application.Comment.Resources;
 using Application.Complaint.Resources;
 using Application.Producer.Resources;
 using Application.Product.Resources;
+using Application.ProductsProperty.Resources;
 using Application.User;
 using AutoMapper;
 using Domain.Models;
@@ -32,6 +33,7 @@ namespace Application.Mapping
             CreateMap<Domain.Models.User, UserForProductsCommentResource>();
             CreateMap<Domain.Models.Product, ProductWithCommentsResource>();
             CreateMap<ProductWithCommentsResource, ProductResource>();
+            CreateMap<Domain.Models.ProductsProperty, ProductsPropertyResource>();
         }
     }
 }

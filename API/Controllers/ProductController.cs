@@ -7,6 +7,7 @@ using Application.Comment.Resources;
 using Application.Product;
 using Application.Product.Params;
 using Application.Product.Resources;
+using Application.ProductsProperty;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ProductResource>> GetProduct(Guid id)
         {
             return await Mediator.Send(new GetProduct.Query {Id = id});
@@ -43,6 +45,14 @@ namespace API.Controllers
             await Mediator.Send(data);
             return NoContent();
         }
+        
+        [AllowAnonymous]
+        [HttpPatch("{productsId}/property/{propertyId}")]
+        public async Task<ActionResult> AddPropertyToProduct(Guid productsId, Guid propertyId, AddPropertyToProduct.Request data)
+        {
+            await Mediator.Send(new AddPropertyToProduct.Command {ProductId = productsId, PropertyId = propertyId, Value = data.Value});
+            return NoContent();
+        }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateProductAsync(UpdateProduct.Command data)
@@ -51,7 +61,7 @@ namespace API.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}/sale/add")]
         public async Task<ActionResult> SetProductsSaleAsync(Guid id, SetProductsSale.Command data)
         {
             data.SetId(id);
@@ -74,10 +84,18 @@ namespace API.Controllers
         }
         
 
+        [AllowAnonymous]
         [HttpGet("{id}/comments")]
         public async Task<ActionResult<List<CommentResource>>> GetCommentsForProductAsync(Guid id)
         {
             return await Mediator.Send(new GetCommentsForProduct.Query {Id = id});
+        }
+        
+        [AllowAnonymous]
+        [HttpGet("{id}/properties")]
+        public async Task<ActionResult<List<PropertyValueForProductResource>>> GetPropertiesForProductAsync(Guid id)
+        {
+            return await Mediator.Send(new GetPropertiesForProduct.Query {Id = id});
         }
     }
 }

@@ -36,6 +36,7 @@ namespace API.Controllers
             return NoContent();
         }
 
+        [AllowAnonymous]
         [HttpPatch("{id}/like")]
         public async Task<ActionResult> LikeCommentAsync(Guid id)
         {
@@ -43,10 +44,27 @@ namespace API.Controllers
             return NoContent();
         }
         
+        [AllowAnonymous]
+        [HttpPatch("{id}/like/cancel")]
+        public async Task<ActionResult> CancelLikeCommentAsync(Guid id)
+        {
+            await Mediator.Send(new CancelCommentsVote.Command {Id = id, Vote = "like"});
+            return NoContent();
+        }
+        
+        [AllowAnonymous]
         [HttpPatch("{id}/dislike")]
         public async Task<ActionResult> DislikeCommentAsync(Guid id)
         {
             await Mediator.Send(new ModifyCommentsPopularity.Command {Id = id, Vote = "dislike"});
+            return NoContent();
+        }
+        
+        [AllowAnonymous]
+        [HttpPatch("{id}/dislike/cancel")]
+        public async Task<ActionResult> CancelDislikeCommentAsync(Guid id)
+        {
+            await Mediator.Send(new CancelCommentsVote.Command {Id = id, Vote = "dislike"});
             return NoContent();
         }
 
