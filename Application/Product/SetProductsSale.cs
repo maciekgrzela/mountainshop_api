@@ -1,30 +1,31 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
-using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 
-namespace Application.ProductsCategories
+namespace Application.Product
 {
-    public class RemoveProductsCategories
+    public class SetProductsSale
     {
         public class Command : IRequest
         {
-            public Guid ProductId { get; set; }
-        }
-        
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
+            public double? PercentageSale { get; set; }
+            private Guid _id;
+
+            public void SetId(Guid id)
             {
-                RuleFor(p => p.ProductId).NotEmpty();
+                _id = id;
+            }
+
+            public Guid GetId()
+            {
+                return _id;
             }
         }
+        
         
         public class Handler : IRequestHandler<Command, Unit>
         {
@@ -37,20 +38,20 @@ namespace Application.ProductsCategories
                 _unitOfWork = unitOfWork;
             }
             
+            
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var existingProductsCategories =
-                    await _context.ProductsCategories.Where(p => p.ProductId == request.ProductId).ToListAsync(cancellationToken: cancellationToken);
+                var existingProduct = await _context.Products.FindAsync(request.GetId());
 
-                if (existingProductsCategories == null)
+                if (existingProduct == null)
                 {
                     throw new RestException(HttpStatusCode.NotFound,
-                        new {data = "Nie znaleziono produktu dla podanego identyfikatora"});
+                        new {info = "Nie znaleziono produktu dla podanego identyfikatora"});
                 }
 
-                _context.ProductsCategories.RemoveRange(existingProductsCategories);
+                existingProduct.PercentageSale = request.PercentageSale;
+                _context.Products.Update(existingProduct);
                 await _unitOfWork.CommitTransactionsAsync();
-
                 return await Task.FromResult(Unit.Value);
             }
         }

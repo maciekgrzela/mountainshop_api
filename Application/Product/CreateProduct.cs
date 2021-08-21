@@ -5,9 +5,11 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
+using Application.Photo;
 using AutoMapper;
 using Domain.Models;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 
@@ -25,6 +27,7 @@ namespace Application.Product
             public double PercentageTax { get; set; }
             public int MinimalOrderedAmount { get; set; }
             public Guid ProducerId { get; set; }
+            public Guid CategoryId { get; set; }
         }
         
         public class ProductsPropertyCommand
@@ -37,12 +40,14 @@ namespace Application.Product
         {
             private readonly DataContext _context;
             private readonly IUnitOfWork _unitOfWork;
+            private readonly IPhotoAccessor _photoAccessor;
             private readonly IMapper _mapper;
 
-            public Handler(DataContext context, IUnitOfWork unitOfWork, IMapper mapper)
+            public Handler(DataContext context, IUnitOfWork unitOfWork, IPhotoAccessor photoAccessor, IMapper mapper)
             {
                 _context = context;
                 _unitOfWork = unitOfWork;
+                _photoAccessor = photoAccessor;
                 _mapper = mapper;
             }
 
@@ -54,6 +59,14 @@ namespace Application.Product
                 {
                     throw new RestException(HttpStatusCode.NotFound,
                         new {info = "Nie znaleziono producenta dla podanego identyfikatora"});
+                }
+
+                var category = await _context.Categories.FindAsync(request.CategoryId);
+
+                if (category == null)
+                {
+                    throw new RestException(HttpStatusCode.NotFound,
+                        new {info = "Nie znaleziono kategorii dla podanego identyfikatora"});
                 }
 
                 var existingPropertiesIds = await _context.ProductsProperties.Select(p => p.Id).ToListAsync(cancellationToken: cancellationToken);
@@ -77,9 +90,10 @@ namespace Application.Product
                     Comments = new List<Domain.Models.Comment>(),
                     Description = request.Description,
                     Producer = producer,
+                    Category = category,
                     NetPrice = request.NetPrice,
                     PercentageTax = request.PercentageTax,
-                    GrossPrice = request.NetPrice + (request.NetPrice * request.PercentageTax),
+                    GrossPrice = request.NetPrice + (request.NetPrice * (request.PercentageTax / 100)),
                     MinimalOrderedAmount = request.MinimalOrderedAmount,
                     ProductsPropertyValues = productsPropertyValues,
                 };

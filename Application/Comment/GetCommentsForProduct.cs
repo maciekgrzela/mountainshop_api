@@ -50,7 +50,10 @@ namespace Application.Comment
                         new {info = "Nie znaleziono produktu dla podanego identyfikatora"});
                 }
 
-                var comments = await _context.Comments.Where(p => p.ProductId == request.Id)
+                var comments = await _context.Comments
+                    .Include(p => p.User)
+                    .Where(p => p.ProductId == request.Id)
+                    .OrderByDescending(p => p.Likes)
                     .ToListAsync(cancellationToken: cancellationToken);
 
                 var commentsResource = _mapper.Map<List<Domain.Models.Comment>, List<CommentResource>>(comments);

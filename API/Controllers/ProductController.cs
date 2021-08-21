@@ -5,74 +5,97 @@ using Application.Category;
 using Application.Comment;
 using Application.Comment.Resources;
 using Application.Product;
+using Application.Product.Params;
 using Application.Product.Resources;
-using MediatR;
+using Application.ProductsProperty;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [ApiController]
     [Route("api/products")]
-    public class ProductController : ControllerBase
+    public class ProductController : BaseController
     {
-        private readonly IMediator _mediator;
-
-        public ProductController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         [HttpGet]
-        public async Task<ActionResult<List<ProductResource>>> GetAllProductsAsync()
+        [AllowAnonymous]
+        public async Task<ActionResult<List<ProductResource>>> GetAllProductsAsync([FromQuery] ProductParams queryParams)
         {
-            return await _mediator.Send(new GetAllProducts.Query());
+            var products = await Mediator.Send(new GetAllProducts.Query {QueryParams = queryParams});
+            return HandlePaginationHeader(products);
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ProductResource>> GetProduct(Guid id)
         {
-            return await _mediator.Send(new GetProduct.Query {Id = id});
+            return await Mediator.Send(new GetProduct.Query {Id = id});
         }
         
         [HttpPost]
         public async Task<ActionResult> CreateProductAsync(CreateProduct.Command data)
         {
-            await _mediator.Send(data);
+            await Mediator.Send(data);
+            return NoContent();
+        }
+        
+        [HttpPost("photo/upload")]
+        public async Task<ActionResult> UploadPhotoAsync([FromForm] UploadProductsImage.Command data)
+        {
+            await Mediator.Send(data);
+            return NoContent();
+        }
+        
+        [AllowAnonymous]
+        [HttpPatch("{productsId}/property/{propertyId}")]
+        public async Task<ActionResult> AddPropertyToProduct(Guid productsId, Guid propertyId, AddPropertyToProduct.Request data)
+        {
+            await Mediator.Send(new AddPropertyToProduct.Command {ProductId = productsId, PropertyId = propertyId, Value = data.Value});
             return NoContent();
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateProductAsync(UpdateProduct.Command data)
         {
-            await _mediator.Send(data);
+            await Mediator.Send(data);
+            return NoContent();
+        }
+
+        [HttpPatch("{id}/sale/add")]
+        public async Task<ActionResult> SetProductsSaleAsync(Guid id, SetProductsSale.Command data)
+        {
+            data.SetId(id);
+            await Mediator.Send(data);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteProductAsync(Guid id)
         {
-            await _mediator.Send(new DeleteProduct.Command {Id = id});
+            await Mediator.Send(new DeleteProduct.Command {Id = id});
             return NoContent();
         }
 
         [HttpDelete("{productId}/property/{propertyId}")]
         public async Task<ActionResult> DeleteProductsPropertyValueForProductAsync(Guid productId, Guid propertyId)
         {
-            await _mediator.Send(new DeletePropertyFromProduct.Command {ProductId = productId, PropertyId = propertyId});
+            await Mediator.Send(new DeletePropertyFromProduct.Command {ProductId = productId, PropertyId = propertyId});
             return NoContent();
         }
         
 
+        [AllowAnonymous]
         [HttpGet("{id}/comments")]
         public async Task<ActionResult<List<CommentResource>>> GetCommentsForProductAsync(Guid id)
         {
-            return await _mediator.Send(new GetCommentsForProduct.Query {Id = id});
+            return await Mediator.Send(new GetCommentsForProduct.Query {Id = id});
         }
         
-        [HttpGet("{id}/categories")]
-        public async Task<ActionResult<List<CategoryResource>>> GetCategoriesForProductAsync(Guid id)
+        [AllowAnonymous]
+        [HttpGet("{id}/properties")]
+        public async Task<ActionResult<List<PropertyValueForProductResource>>> GetPropertiesForProductAsync(Guid id)
         {
-            return await _mediator.Send(new GetCategoriesForProduct.Query {Id = id});
+            return await Mediator.Send(new GetPropertiesForProduct.Query {Id = id});
         }
     }
 }

@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Producer.Params;
 using Application.Producer.Resources;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,14 +15,12 @@ namespace Application.Producer
 {
     public class GetAllProducers
     {
-        public class Query : IRequest<List<ProducerResource>> { }
-
-        public class QueryValidator : AbstractValidator<Query>
+        public class Query : IRequest<PagedList<ProducerResource>>
         {
-            public QueryValidator() { }
+            public ProducerParams QueryParams { get; set; }
         }
-        
-        public class Handler : IRequestHandler<Query, List<ProducerResource>>
+
+        public class Handler : IRequestHandler<Query, PagedList<ProducerResource>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -30,13 +31,74 @@ namespace Application.Producer
                 _mapper = mapper;
             }
             
-            public async Task<List<ProducerResource>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<PagedList<ProducerResource>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var producers = await _context.Producers.ToListAsync(cancellationToken: cancellationToken);
-                var producerResources =
-                    _mapper.Map<List<Domain.Models.Producer>, List<ProducerResource>>(producers);
+                var producers = _context.Producers
+                    .Include(p => p.Products)
+                    .OrderByDescending(p => p.Products.Count)
+                    .ProjectTo<ProducerResource>(_mapper.ConfigurationProvider).AsQueryable();
 
-                return producerResources;
+
+                producers = FilterByName(producers, request.QueryParams);
+                producers = FilterByDescription(producers, request.QueryParams);
+                producers = SortByName(producers, request.QueryParams);
+                producers = SortByDescription(producers, request.QueryParams);
+
+                var producersList = await PagedList<ProducerResource>.ToPagedListAsync(producers,
+                    request.QueryParams.PageNumber, request.QueryParams.PageSize);
+                
+
+                return producersList;
+            }
+
+            private IQueryable<ProducerResource> SortByDescription(IQueryable<ProducerResource> producers, ProducerParams requestQueryParams)
+            {
+                if (requestQueryParams.DescriptionAsc != null)
+                {
+                    producers = producers.OrderBy(p => p.Description);
+                }
+                
+                if (requestQueryParams.DescriptionDesc != null)
+                {
+                    producers = producers.OrderByDescending(p => p.Description);
+                }
+
+                return producers;
+            }
+
+            private IQueryable<ProducerResource> SortByName(IQueryable<ProducerResource> producers, ProducerParams requestQueryParams)
+            {
+                if (requestQueryParams.NameAsc != null)
+                {
+                    producers = producers.OrderBy(p => p.Name);
+                }
+                
+                if (requestQueryParams.NameDesc != null)
+                {
+                    producers = producers.OrderByDescending(p => p.Name);
+                }
+
+                return producers;
+            }
+
+            private IQueryable<ProducerResource> FilterByDescription(IQueryable<ProducerResource> producers, ProducerParams requestQueryParams)
+            {
+                if (!string.IsNullOrWhiteSpace(requestQueryParams.DescriptionFilter))
+                {
+                    producers = producers.Where(p => p.Description.Contains(requestQueryParams.DescriptionFilter));
+                }
+
+                return producers;
+            }
+
+            private IQueryable<ProducerResource> FilterByName(IQueryable<ProducerResource> producers, ProducerParams requestQueryParams)
+            {
+                if (!string.IsNullOrWhiteSpace(requestQueryParams.NameFilter))
+                {
+                    producers = producers.Where(p => p.Name.Contains(requestQueryParams.NameFilter));
+                }
+
+                return producers;
             }
         }
     }

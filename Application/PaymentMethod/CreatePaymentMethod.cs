@@ -13,7 +13,6 @@ namespace Application.PaymentMethod
         public class Command : IRequest
         {
             public string Name { get; set; }
-            public string ImagePath { get; set; }
             public double Price { get; set; }
         }
         
@@ -22,7 +21,6 @@ namespace Application.PaymentMethod
             public CommandValidator()
             {
                 RuleFor(p => p.Name).NotEmpty();
-                RuleFor(p => p.ImagePath).NotEmpty();
                 RuleFor(p => p.Price).NotEmpty().GreaterThanOrEqualTo(0);
             }
         }
@@ -46,7 +44,6 @@ namespace Application.PaymentMethod
                     Id = Guid.NewGuid(),
                     Name = request.Name,
                     Price = request.Price,
-                    ImagePath = request.ImagePath,
                     Orders = new List<Domain.Models.Order>()
                 };
 

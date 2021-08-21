@@ -5,6 +5,7 @@ namespace Application.Comment.Resources
     public class CommentResource
     {
         public Guid Id { get; set; }
+        public string Title { get; set; }
         public string Content { get; set; }
         public UserForCommentsResource User { get; set; }
         public ProductForCommentsResource Product { get; set; }

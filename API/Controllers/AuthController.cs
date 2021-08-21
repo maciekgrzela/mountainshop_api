@@ -6,22 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class AuthController : BaseController
     {
-        private readonly IMediator _mediator;
-
-        public AuthController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<LoggedUserResource>> LoginAsync(Login.Query query)
         {
-            return await _mediator.Send(query);
+            return await Mediator.Send(query);
         }
 
         [AllowAnonymous]
@@ -29,7 +21,7 @@ namespace API.Controllers
         public async Task<ActionResult<LoggedUserResource>> RegisterCustomerAsync(Register.Query query)
         {
             query.setRole("Customer");
-            return await _mediator.Send(query);
+            return await Mediator.Send(query);
         }
 
         [AllowAnonymous]
@@ -37,7 +29,7 @@ namespace API.Controllers
         public async Task<ActionResult<LoggedUserResource>> RegisterCustomerWithFacebook(FacebookLogin.Query query)
         {
             query.setRole("Customer");
-            return await _mediator.Send(query);
+            return await Mediator.Send(query);
         }
 
         [Authorize(Roles = "Owner,Admin")]
@@ -45,7 +37,7 @@ namespace API.Controllers
         public async Task<ActionResult<LoggedUserResource>> RegisterOwnerAsync(Register.Query query)
         {
             query.setRole("Owner");
-            return await _mediator.Send(query);
+            return await Mediator.Send(query);
         }
 
         [Authorize(Roles = "Admin")]
@@ -53,7 +45,7 @@ namespace API.Controllers
         public async Task<ActionResult<LoggedUserResource>> RegisterAdminAsync(Register.Query query)
         {
             query.setRole("Admin");
-            return await _mediator.Send(query);
+            return await Mediator.Send(query);
         }
     }
 }

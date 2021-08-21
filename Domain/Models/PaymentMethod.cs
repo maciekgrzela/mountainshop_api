@@ -10,7 +10,6 @@ namespace Domain.Models
         public Guid Id { get; set; }
         [Required, MinLength(10)]
         public string Name { get; set; }
-        public string ImagePath { get; set; }
         [Required, Range(0 ,double.MaxValue)]
         public double Price { get; set; }
         [Required]

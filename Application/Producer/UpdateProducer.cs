@@ -15,7 +15,6 @@ namespace Application.Producer
         {
             public string Name { get; set; }
             public string Description { get; set; }
-            public string PathImage { get; set; }
             private Guid _id;
 
             public void SetId(Guid id)
@@ -35,7 +34,6 @@ namespace Application.Producer
             {
                 RuleFor(p => p.Name).NotEmpty();
                 RuleFor(p => p.Description).NotEmpty();
-                RuleFor(p => p.PathImage).NotEmpty();
             }
         }
         
@@ -62,7 +60,6 @@ namespace Application.Producer
 
                 existingProducer.Name = request.Name;
                 existingProducer.Description = request.Description;
-                existingProducer.PathImage = request.PathImage;
 
                 _context.Producers.Update(existingProducer);
                 await _unitOfWork.CommitTransactionsAsync();

@@ -14,7 +14,6 @@ namespace Application.PaymentMethod
         public class Command : IRequest
         {
             public string Name { get; set; }
-            public string ImagePath { get; set; }
             public double Price { get; set; }
             private Guid _id;
 
@@ -35,7 +34,6 @@ namespace Application.PaymentMethod
             {
                 RuleFor(p => p.Name).NotEmpty();
                 RuleFor(p => p.Price).NotEmpty().GreaterThanOrEqualTo(0);
-                RuleFor(p => p.ImagePath).NotEmpty();
             }
         }
         
@@ -62,7 +60,6 @@ namespace Application.PaymentMethod
 
                 existingPaymentMethod.Name = request.Name;
                 existingPaymentMethod.Price = request.Price;
-                existingPaymentMethod.ImagePath = request.ImagePath;
 
                 _context.PaymentMethods.Update(existingPaymentMethod);
                 await _unitOfWork.CommitTransactionsAsync();
