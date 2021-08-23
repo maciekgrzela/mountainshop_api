@@ -12,8 +12,7 @@ namespace Domain.Models
         public string Name { get; set; }
         [Required, Range(0, double.MaxValue)]
         public double Price { get; set; }
-        [Required]
-        public bool Takeaway { get; set; }
         public List<Order> Orders { get; set; }
+        public List<PaymentMethod> PaymentMethods { get; set; }
     }
 }

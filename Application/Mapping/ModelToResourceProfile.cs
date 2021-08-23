@@ -38,6 +38,8 @@ namespace Application.Mapping
             CreateMap<Domain.Models.ProductsProperty, ProductsPropertyResource>();
             CreateMap<Domain.Models.PaymentMethod, PaymentMethodResource>();
             CreateMap<Domain.Models.DeliveryMethod, DeliveryMethodResource>();
+            CreateMap<Domain.Models.DeliveryMethod, DeliveryMethodForPaymentResource>();
+            CreateMap<Domain.Models.PaymentMethod, PaymentMethodForDeliveryResource>();
         }
     }
 }
