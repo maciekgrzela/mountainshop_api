@@ -2,6 +2,8 @@
 using Application.Category;
 using Application.Comment.Resources;
 using Application.Complaint.Resources;
+using Application.DeliveryMethod.Resources;
+using Application.PaymentMethod.Resources;
 using Application.Producer.Resources;
 using Application.Product.Resources;
 using Application.ProductsProperty.Resources;
@@ -34,6 +36,8 @@ namespace Application.Mapping
             CreateMap<Domain.Models.Product, ProductWithCommentsResource>();
             CreateMap<ProductWithCommentsResource, ProductResource>();
             CreateMap<Domain.Models.ProductsProperty, ProductsPropertyResource>();
+            CreateMap<Domain.Models.PaymentMethod, PaymentMethodResource>();
+            CreateMap<Domain.Models.DeliveryMethod, DeliveryMethodResource>();
         }
     }
 }
