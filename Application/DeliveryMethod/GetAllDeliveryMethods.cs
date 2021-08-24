@@ -36,6 +36,7 @@ namespace Application.DeliveryMethod
                 var deliveryMethods = _context.DeliveryMethods
                     .Include(p => p.PaymentMethods)
                     .ProjectTo<DeliveryMethodResource>(_mapper.ConfigurationProvider)
+                    .OrderBy(p => p.Price)
                     .AsQueryable();
 
                 deliveryMethods = FilterByPrice(deliveryMethods, request.QueryParams);
