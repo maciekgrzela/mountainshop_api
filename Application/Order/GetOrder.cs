@@ -6,6 +6,7 @@ using Application.Errors;
 using Application.Order.Resources;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 
 namespace Application.Order
@@ -30,7 +31,12 @@ namespace Application.Order
             
             public async Task<OrderResource> Handle(Query request, CancellationToken cancellationToken)
             {
-                var order = await _context.Orders.FindAsync(request.Id);
+                var order = await _context.Orders
+                    .Include(p => p.DeliveryMethod)
+                    .Include(p => p.PaymentMethod)
+                    .Include(p => p.OrderDetails)
+                    .Include(p => p.OrderedProducts)
+                    .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
 
                 if (order == null)
                 {

@@ -33,11 +33,10 @@ namespace API.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateAsync(Guid id, UpdateOrder.Command data)
+        [HttpPatch("{id}/paid")]
+        public async Task<ActionResult> ChangeOrderStatusAsync(Guid id)
         {
-            data.SetId(id);
-            await Mediator.Send(data);
+            await Mediator.Send(new ChangeOrderStatus.Command {Id = id});
             return NoContent();
         }
 

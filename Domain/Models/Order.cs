@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
@@ -21,14 +22,9 @@ namespace Domain.Models
         public Guid DeliveryMethodId { get; set; }
         [Required]
         public DeliveryMethod DeliveryMethod { get; set; }
-        [Required, Range(0, double.MaxValue)]
-        public double NetPrice { get; set; }
-        [Required, Range(0, 100)]
-        public double PercentageTax { get; set; }
-        [Required, Range(0, double.MaxValue)]
-        public double GrossPrice { get; set; }
-        [Required, Range(0, int.MaxValue)]
-        public int TotalAmount { get; set; }
+        [Required]
+        public List<OrderedProduct> OrderedProducts { get; set; }
+        public string Status { get; set; }
         [Required]
         public DateTime Created { get; set; }
         [Required]

@@ -3,34 +3,17 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
-using FluentValidation;
+using Domain.Models;
 using MediatR;
 using Persistence.Context;
 
 namespace Application.Order
 {
-    public class UpdateOrder
+    public class ChangeOrderStatus
     {
         public class Command : IRequest
         {
-            private Guid _id;
-
-            public void SetId(Guid id)
-            {
-                _id = id;
-            }
-
-            public Guid GetId()
-            {
-                return _id;
-            }
-        }
-
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
-            {
-            }
+            public Guid Id { get; set; }
         }
         
         public class Handler : IRequestHandler<Command, Unit>
@@ -46,7 +29,19 @@ namespace Application.Order
             
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                throw new System.NotImplementedException();
+                var existingOrder = await _context.Orders.FindAsync(request.Id);
+
+                if (existingOrder == null)
+                {
+                    throw new RestException(HttpStatusCode.NotFound,
+                        new {info = "Nie znaleziono zamówienia dla podanego identyfikatora"});
+                }
+
+                existingOrder.Status = OrderStatus.Paid;
+
+                _context.Orders.Update(existingOrder);
+                await _unitOfWork.CommitTransactionsAsync();
+                return await Task.FromResult(Unit.Value);
             }
         }
     }

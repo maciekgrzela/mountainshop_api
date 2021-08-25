@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Application.Order.Resources
 {
@@ -9,10 +10,8 @@ namespace Application.Order.Resources
         public OrderDetailsForOrderResource Details { get; set; }
         public PaymentMethodForOrderResource PaymentMethod { get; set; }
         public DeliveryMethodForOrderResource DeliveryMethod { get; set; }
-        public double NetPrice { get; set; }
-        public double PercentageTax { get; set; }
-        public double GrossPrice { get; set; }
-        public int TotalAmount { get; set; }
+        public List<OrderedProductForOrderResource> OrderedProducts { get; set; }
+        public string Status { get; set; }
         public DateTime Created { get; set; }
         public DateTime WarrantyIsInForce { get; set; }
     }

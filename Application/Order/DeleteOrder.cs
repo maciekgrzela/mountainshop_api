@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using MediatR;
 using Persistence.Context;
 
@@ -26,7 +28,17 @@ namespace Application.Order
             
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                throw new System.NotImplementedException();
+                var existingOrder = await _context.Orders.FindAsync(request.Id);
+
+                if (existingOrder == null)
+                {
+                    throw new RestException(HttpStatusCode.NotFound,
+                        new {info = "Nie znaleziono zamówienia dla podanego identyfikatora"});
+                }
+
+                _context.Orders.Remove(existingOrder);
+                await _unitOfWork.CommitTransactionsAsync();
+                return await Task.FromResult(Unit.Value);
             }
         }
     }

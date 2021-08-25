@@ -3,6 +3,7 @@ using Application.Category;
 using Application.Comment.Resources;
 using Application.Complaint.Resources;
 using Application.DeliveryMethod.Resources;
+using Application.Order.Resources;
 using Application.PaymentMethod.Resources;
 using Application.Producer.Resources;
 using Application.Product.Resources;
@@ -40,6 +41,7 @@ namespace Application.Mapping
             CreateMap<Domain.Models.DeliveryMethod, DeliveryMethodResource>();
             CreateMap<Domain.Models.DeliveryMethod, DeliveryMethodForPaymentResource>();
             CreateMap<Domain.Models.PaymentMethod, PaymentMethodForDeliveryResource>();
+            CreateMap<OrderedProduct, OrderedProductForOrderResource>();
         }
     }
 }
