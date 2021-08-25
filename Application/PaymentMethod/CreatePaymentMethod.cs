@@ -44,7 +44,8 @@ namespace Application.PaymentMethod
                     Id = Guid.NewGuid(),
                     Name = request.Name,
                     Price = request.Price,
-                    Orders = new List<Domain.Models.Order>()
+                    Orders = new List<Domain.Models.Order>(),
+                    DeliveryMethods = new List<Domain.Models.DeliveryMethod>()
                 };
 
                 await _context.PaymentMethods.AddAsync(paymentMethod, cancellationToken);

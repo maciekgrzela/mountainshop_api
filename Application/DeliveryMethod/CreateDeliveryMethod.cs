@@ -15,7 +15,6 @@ namespace Application.DeliveryMethod
         {
             public string Name { get; set; }
             public double Price { get; set; }
-            public bool Takeaway { get; set; }
         }
         
         public class CommandValidator : AbstractValidator<Command>
@@ -24,7 +23,6 @@ namespace Application.DeliveryMethod
             {
                 RuleFor(p => p.Name).NotEmpty();
                 RuleFor(p => p.Price).NotEmpty().GreaterThanOrEqualTo(0);
-                RuleFor(p => p.Takeaway).NotEmpty();
             }
         }
         
@@ -47,8 +45,8 @@ namespace Application.DeliveryMethod
                     Id = Guid.NewGuid(),
                     Name = request.Name,
                     Price = request.Price,
-                    Takeaway = request.Takeaway,
-                    Orders = new List<Domain.Models.Order>()
+                    Orders = new List<Domain.Models.Order>(),
+                    PaymentMethods = new List<Domain.Models.PaymentMethod>(),
                 };
 
                 await _context.DeliveryMethods.AddAsync(deliveryMethod, cancellationToken);

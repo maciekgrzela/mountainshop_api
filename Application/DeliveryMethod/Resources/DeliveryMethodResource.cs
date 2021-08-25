@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Application.DeliveryMethod.Resources
 {
@@ -7,6 +8,13 @@ namespace Application.DeliveryMethod.Resources
         public Guid Id { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }
-        public bool Takeaway { get; set; }
+        public List<PaymentMethodForDeliveryResource> PaymentMethods { get; set; }
+    }
+
+    public class PaymentMethodForDeliveryResource
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public double Price { get; set; }
     }
 }

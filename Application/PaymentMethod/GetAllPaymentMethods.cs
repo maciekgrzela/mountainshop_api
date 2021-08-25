@@ -34,6 +34,7 @@ namespace Application.PaymentMethod
             public async Task<PagedList<PaymentMethodResource>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var paymentMethods = _context.PaymentMethods
+                    .Include(p => p.DeliveryMethods)
                     .ProjectTo<PaymentMethodResource>(_mapper.ConfigurationProvider)
                     .AsQueryable();
 

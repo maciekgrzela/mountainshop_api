@@ -33,6 +33,20 @@ namespace API.Controllers
             await Mediator.Send(data);
             return NoContent();
         }
+        
+        [HttpPatch("{paymentId}/assign/delivery/{deliveryId}")]
+        public async Task<ActionResult> AssignPaymentToDeliveryAsync(Guid paymentId, Guid deliveryId)
+        {
+            await Mediator.Send(new AssignPaymentToDelivery.Command {PaymentId = paymentId, DeliveryId = deliveryId});
+            return NoContent();
+        }
+        
+        [HttpPatch("{paymentId}/remove/delivery/{deliveryId}")]
+        public async Task<ActionResult> RemovePaymentFromDeliveryAsync(Guid paymentId, Guid deliveryId)
+        {
+            await Mediator.Send(new AssignPaymentToDelivery.Command {PaymentId = paymentId, DeliveryId = deliveryId});
+            return NoContent();
+        }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateAsync(Guid id, UpdatePaymentMethod.Command data)

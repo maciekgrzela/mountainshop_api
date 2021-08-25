@@ -40,13 +40,6 @@ namespace Application.Order
                 RuleFor(p => p.Place).NotEmpty();
                 RuleFor(p => p.Country).NotEmpty();
                 RuleFor(p => p.PhoneNumber).NotEmpty();
-                RuleFor(p => p.CompanyName).NotEmpty();
-                RuleFor(p => p.CompanyNip).NotEmpty();
-                RuleFor(p => p.CompanyAddressLineOne).NotEmpty();
-                RuleFor(p => p.CompanyPostalCode).NotEmpty();
-                RuleFor(p => p.CompanyPlace).NotEmpty();
-                RuleFor(p => p.CompanyCountry).NotEmpty();
-                RuleFor(p => p.CompanyPhoneNumber).NotEmpty();
                 RuleFor(p => p.PaymentMethodId).NotEmpty();
                 RuleFor(p => p.DeliveryMethodId).NotEmpty();
             }

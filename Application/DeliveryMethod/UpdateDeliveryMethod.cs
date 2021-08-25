@@ -15,7 +15,6 @@ namespace Application.DeliveryMethod
         {
             public string Name { get; set; }
             public double Price { get; set; }
-            public bool Takeaway { get; set; }
             private Guid _id;
 
             public void SetId(Guid id)
@@ -35,7 +34,6 @@ namespace Application.DeliveryMethod
             {
                 RuleFor(p => p.Name).NotEmpty();
                 RuleFor(p => p.Price).NotEmpty().GreaterThanOrEqualTo(0);
-                RuleFor(p => p.Takeaway).NotEmpty();
             }
         }
         
@@ -62,7 +60,6 @@ namespace Application.DeliveryMethod
 
                 existingDeliveryMethod.Name = request.Name;
                 existingDeliveryMethod.Price = request.Price;
-                existingDeliveryMethod.Takeaway = request.Takeaway;
 
                 _context.DeliveryMethods.Update(existingDeliveryMethod);
                 await _unitOfWork.CommitTransactionsAsync();
