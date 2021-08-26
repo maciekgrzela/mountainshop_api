@@ -7,6 +7,5 @@ namespace Application.Order.Resources
         public Guid Id { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }
-        public bool Takeaway { get; set; }
     }
 }

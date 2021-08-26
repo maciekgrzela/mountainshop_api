@@ -14,6 +14,7 @@ namespace Domain.Models
         public double Price { get; set; }
         [Required]
         public List<Order> Orders { get; set; }
+        public bool ExternalApi { get; set; }
         public List<DeliveryMethod> DeliveryMethods { get; set; }
     }
 }

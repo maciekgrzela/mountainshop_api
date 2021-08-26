@@ -7,7 +7,7 @@ namespace Application.Order.Resources
     {
         public Guid Id { get; set; }
         public int Number { get; set; }
-        public OrderDetailsForOrderResource Details { get; set; }
+        public OrderDetailsForOrderResource OrderDetails { get; set; }
         public PaymentMethodForOrderResource PaymentMethod { get; set; }
         public DeliveryMethodForOrderResource DeliveryMethod { get; set; }
         public List<OrderedProductForOrderResource> OrderedProducts { get; set; }

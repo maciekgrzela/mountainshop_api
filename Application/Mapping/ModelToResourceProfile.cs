@@ -42,6 +42,19 @@ namespace Application.Mapping
             CreateMap<Domain.Models.DeliveryMethod, DeliveryMethodForPaymentResource>();
             CreateMap<Domain.Models.PaymentMethod, PaymentMethodForDeliveryResource>();
             CreateMap<OrderedProduct, OrderedProductForOrderResource>();
+            CreateMap<Domain.Models.Order, OrderResource>();
+            CreateMap<OrderDetails, OrderDetailsForOrderResource>();
+            CreateMap<Domain.Models.PaymentMethod, PaymentMethodForOrderResource>();
+            CreateMap<Domain.Models.DeliveryMethod, DeliveryMethodForOrderResource>();
+            CreateMap<Domain.Models.Order, OrderForUserResource>();
+            CreateMap<OrderedProduct, OrderedProductForUserOrderResource>()
+                .ForMember(p => p.Description, o => o.MapFrom(p => p.Product.Description))
+                .ForMember(p => p.Image, o => o.MapFrom(p => p.Product.Image))
+                .ForMember(p => p.Name, o => o.MapFrom(p => p.Product.Name))
+                .ForMember(p => p.GrossPrice, o => o.MapFrom(p => p.Product.GrossPrice))
+                .ForMember(p => p.NetPrice, o => o.MapFrom(p => p.Product.NetPrice))
+                .ForMember(p => p.PercentageSale, o => o.MapFrom(p => p.Product.PercentageSale))
+                .ForMember(p => p.PercentageTax, o => o.MapFrom(p => p.Product.PercentageTax));
         }
     }
 }

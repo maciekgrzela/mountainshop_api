@@ -25,6 +25,12 @@ namespace API.Controllers
         {
             return await Mediator.Send(new GetOrder.Query{Id = id});
         }
+        
+        [HttpGet("last/for/user/{userId}")]
+        public async Task<ActionResult<OrderForUserResource>> GetLastOrderForUserAsync(string userId)
+        {
+            return await Mediator.Send(new GetLastOrderForUser.Query{Id = userId});
+        }
 
         [HttpPost]
         public async Task<ActionResult> CreateAsync(CreateOrder.Command data)

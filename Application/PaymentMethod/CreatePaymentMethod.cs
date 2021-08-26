@@ -14,6 +14,7 @@ namespace Application.PaymentMethod
         {
             public string Name { get; set; }
             public double Price { get; set; }
+            public bool ExternalApi { get; set; }
         }
         
         public class CommandValidator : AbstractValidator<Command>
@@ -22,6 +23,7 @@ namespace Application.PaymentMethod
             {
                 RuleFor(p => p.Name).NotEmpty();
                 RuleFor(p => p.Price).NotEmpty().GreaterThanOrEqualTo(0);
+                RuleFor(p => p.ExternalApi).NotEmpty();
             }
         }
         
@@ -44,6 +46,7 @@ namespace Application.PaymentMethod
                     Id = Guid.NewGuid(),
                     Name = request.Name,
                     Price = request.Price,
+                    ExternalApi = request.ExternalApi,
                     Orders = new List<Domain.Models.Order>(),
                     DeliveryMethods = new List<Domain.Models.DeliveryMethod>()
                 };

@@ -7,8 +7,6 @@ namespace Application.Order.Resources
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
-        public string UserFirstname { get; set; }
-        public string UserLastname { get; set; }
         public string AddressLineOne { get; set; }
         public string PostalCode { get; set; }
         public string Place { get; set; }
