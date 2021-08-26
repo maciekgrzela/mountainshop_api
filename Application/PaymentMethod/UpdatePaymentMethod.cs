@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace Application.PaymentMethod
         {
             public string Name { get; set; }
             public double Price { get; set; }
+            public bool ExternalApi { get; set; }
             private Guid _id;
 
             public void SetId(Guid id)
@@ -34,6 +36,7 @@ namespace Application.PaymentMethod
             {
                 RuleFor(p => p.Name).NotEmpty();
                 RuleFor(p => p.Price).NotEmpty().GreaterThanOrEqualTo(0);
+                RuleFor(p => p.ExternalApi).NotEmpty();
             }
         }
         
@@ -60,6 +63,7 @@ namespace Application.PaymentMethod
 
                 existingPaymentMethod.Name = request.Name;
                 existingPaymentMethod.Price = request.Price;
+                existingPaymentMethod.ExternalApi = request.ExternalApi;
 
                 _context.PaymentMethods.Update(existingPaymentMethod);
                 await _unitOfWork.CommitTransactionsAsync();

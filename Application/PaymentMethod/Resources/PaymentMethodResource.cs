@@ -8,6 +8,7 @@ namespace Application.PaymentMethod.Resources
         public Guid Id { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }
+        public bool ExternalApi { get; set; }
         public List<DeliveryMethodForPaymentResource> DeliveryMethods { get; set; }
     }
 

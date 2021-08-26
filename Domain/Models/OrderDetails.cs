@@ -16,11 +16,11 @@ namespace Domain.Models
         public string Place { get; set; }
         [MaxLength(150)]
         public string Country { get; set; }
-        [MinLength(11), MaxLength(11)]
+        [MinLength(12), MaxLength(20)]
         public string PhoneNumber { get; set; }
         [MaxLength(1000)]
         public string CompanyName { get; set; }
-        [MinLength(10), MaxLength(10)]
+        [MinLength(10), MaxLength(15)]
         public string CompanyNip { get; set; }
         [MaxLength(200)]
         public string CompanyAddressLineOne { get; set; }
@@ -30,7 +30,7 @@ namespace Domain.Models
         public string CompanyPlace { get; set; }
         [MaxLength(150)]
         public string CompanyCountry { get; set; }
-        [MinLength(11), MaxLength(11)]
+        [MinLength(12), MaxLength(20)]
         public string CompanyPhoneNumber { get; set; }
     }
 }
