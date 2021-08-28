@@ -25,6 +25,7 @@ namespace Application.Product
             public int AmountInStorage { get; set; }
             public double NetPrice { get; set; }
             public double PercentageTax { get; set; }
+            public string Gender { get; set; }
             public int MinimalOrderedAmount { get; set; }
             public Guid ProducerId { get; set; }
             public Guid CategoryId { get; set; }
@@ -89,6 +90,7 @@ namespace Application.Product
                     AmountInStorage = request.AmountInStorage,
                     Comments = new List<Domain.Models.Comment>(),
                     Description = request.Description,
+                    Gender = request.Gender,
                     Producer = producer,
                     Category = category,
                     NetPrice = request.NetPrice,

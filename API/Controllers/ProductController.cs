@@ -39,6 +39,18 @@ namespace API.Controllers
             return NoContent();
         }
         
+        [HttpPost("list")]
+        [AllowAnonymous]
+        public async Task<ActionResult> CreateProductsRangeAsync(List<CreateProduct.Command> data)
+        {
+            foreach (var product in data)
+            {
+                await Mediator.Send(product);
+            }
+            
+            return NoContent();
+        }
+        
         [HttpPost("photo/upload")]
         public async Task<ActionResult> UploadPhotoAsync([FromForm] UploadProductsImage.Command data)
         {

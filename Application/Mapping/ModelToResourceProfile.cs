@@ -6,6 +6,7 @@ using Application.DeliveryMethod.Resources;
 using Application.Order.Resources;
 using Application.PaymentMethod.Resources;
 using Application.Producer.Resources;
+using Application.Product;
 using Application.Product.Resources;
 using Application.ProductsProperty.Resources;
 using Application.User;
@@ -47,6 +48,7 @@ namespace Application.Mapping
             CreateMap<Domain.Models.PaymentMethod, PaymentMethodForOrderResource>();
             CreateMap<Domain.Models.DeliveryMethod, DeliveryMethodForOrderResource>();
             CreateMap<Domain.Models.Order, OrderForUserResource>();
+            CreateMap<CreateProduct.ProductsPropertyCommand, ProductsPropertyValue>();
             CreateMap<OrderedProduct, OrderedProductForUserOrderResource>()
                 .ForMember(p => p.Description, o => o.MapFrom(p => p.Product.Description))
                 .ForMember(p => p.Image, o => o.MapFrom(p => p.Product.Image))
