@@ -98,6 +98,7 @@ namespace Application.Product
                     GrossPrice = request.NetPrice + (request.NetPrice * (request.PercentageTax / 100)),
                     MinimalOrderedAmount = request.MinimalOrderedAmount,
                     ProductsPropertyValues = productsPropertyValues,
+                    Created = DateTime.Now,
                 };
 
                 await _context.Products.AddAsync(product, cancellationToken);
