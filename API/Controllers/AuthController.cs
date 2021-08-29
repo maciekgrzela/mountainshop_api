@@ -9,6 +9,12 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class AuthController : BaseController
     {
+        [HttpGet("login/current")]
+        public async Task<ActionResult<LoggedUserResource>> GetCurrentUserAsync()
+        {
+            return await Mediator.Send(new GetCurrentUser.Query());
+        }
+        
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<LoggedUserResource>> LoginAsync(Login.Query query)

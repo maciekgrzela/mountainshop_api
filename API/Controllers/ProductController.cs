@@ -57,7 +57,7 @@ namespace API.Controllers
             await Mediator.Send(data);
             return NoContent();
         }
-        
+
         [AllowAnonymous]
         [HttpPatch("{productsId}/property/{propertyId}")]
         public async Task<ActionResult> AddPropertyToProduct(Guid productsId, Guid propertyId, AddPropertyToProduct.Request data)

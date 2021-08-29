@@ -149,6 +149,7 @@ namespace API
             services.AddScoped<IWebTokenGenerator, WebTokenGenerator>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+            services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddMediatR(typeof(Login.Handler).Assembly);
             services.AddAutoMapper(typeof(Login.Handler));
         }

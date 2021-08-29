@@ -37,7 +37,7 @@ namespace Persistence.Context
 
             modelBuilder.Entity<Order>()
                 .Property(p => p.Number)
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedOnAddOrUpdate();
 
             modelBuilder.Entity<Producer>()
                 .HasIndex(p => p.Name)

@@ -68,6 +68,7 @@ namespace Application.Comment
                 var comment = new Domain.Models.Comment
                 {
                     Id = Guid.NewGuid(),
+                    Title = request.Title,
                     Content = request.Content,
                     Created = DateTime.Now,
                     Likes = 0,

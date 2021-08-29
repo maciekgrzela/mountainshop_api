@@ -51,8 +51,8 @@ namespace Application.Checkout
                     },
                     LineItems = itemOptions,
                     Mode = "payment",
-                    SuccessUrl = $"{domain}success?stripe_redirect=true",
-                    CancelUrl = $"{domain}canceled?stripe_redirect=true"
+                    SuccessUrl = $"{domain}created?stripe_redirect=true",
+                    CancelUrl = $"{domain}created?stripe_redirect=false"
                 };
 
                 var service = new SessionService();
@@ -101,9 +101,11 @@ namespace Application.Checkout
                     var deliveryPriceOptions = new PriceCreateOptions
                     {
                         Product = deliveryOption.Id,
-                        UnitAmountDecimal = (decimal?) order.DeliveryMethod.Price * 100,
+                        UnitAmount = (long?) (Math.Round(order.DeliveryMethod.Price,2) * 100),
                         Currency = "pln"
                     };
+                    
+                    Console.WriteLine(deliveryPriceOptions.UnitAmountDecimal);
 
                     var deliveryPrice = await priceService.CreateAsync(deliveryPriceOptions);
                     
@@ -125,7 +127,7 @@ namespace Application.Checkout
                     var paymentPriceOptions = new PriceCreateOptions
                     {
                         Product = paymentOption.Id,
-                        UnitAmountDecimal = (decimal?) order.DeliveryMethod.Price * 100,
+                        UnitAmount = (long?) (Math.Round(order.DeliveryMethod.Price,2) * 100),
                         Currency = "pln"
                     };
 
@@ -149,12 +151,12 @@ namespace Application.Checkout
                     var priceOptions = new PriceCreateOptions
                     {
                         Product = product.Id,
-                        UnitAmountDecimal = (decimal?) orderedProduct.Product.GrossPrice * 100,
+                        UnitAmount = (long?) (Math.Round(orderedProduct.Product.GrossPrice, 2) * 100),
                         Currency = "pln"
                     };
 
                     var price = await priceService.CreateAsync(priceOptions);
-                    
+
                     lineItems.Add(new SessionLineItemOptions
                     {
                         Price = price.Id,
