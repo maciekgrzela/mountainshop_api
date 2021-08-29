@@ -21,6 +21,7 @@ namespace Persistence.Context
         public DbSet<Producer> Producers { get; set; }
         public DbSet<ProductsOrders> ProductsOrders { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<ContactRequest> ContactRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
