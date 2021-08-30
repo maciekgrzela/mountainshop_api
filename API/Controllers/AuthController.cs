@@ -59,5 +59,12 @@ namespace API.Controllers
             query.setRole("Admin");
             return await Mediator.Send(query);
         }
+
+        [HttpPut("update/data")]
+        public async Task<ActionResult> UpdateMyDataAsync(UpdateUsersData.Command data)
+        {
+            await Mediator.Send(data);
+            return NoContent();
+        }
     }
 }

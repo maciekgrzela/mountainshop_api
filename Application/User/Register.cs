@@ -72,7 +72,7 @@ namespace Application.User
             {
                 var existingEmail = await _userManager.Users.Where(p => p.Email == request.Email).ToListAsync(cancellationToken: cancellationToken);
 
-                if (existingEmail != null)
+                if (existingEmail.Count > 0)
                 {
                     throw new RestException(HttpStatusCode.Unauthorized,
                         new {info = "Użytkownik dla podanego adresu e-mail już istnieje"});
