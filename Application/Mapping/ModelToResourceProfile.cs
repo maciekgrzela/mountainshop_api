@@ -42,7 +42,11 @@ namespace Application.Mapping
             CreateMap<Domain.Models.DeliveryMethod, DeliveryMethodResource>();
             CreateMap<Domain.Models.DeliveryMethod, DeliveryMethodForPaymentResource>();
             CreateMap<Domain.Models.PaymentMethod, PaymentMethodForDeliveryResource>();
-            CreateMap<OrderedProduct, OrderedProductForOrderResource>();
+            CreateMap<OrderedProduct, OrderedProductForOrderResource>()
+                .ForMember(p => p.ProductImage, o => o.MapFrom(p => p.Product.Image))
+                .ForMember(p => p.ProductName, o => o.MapFrom(p => p.Product.Name))
+                .ForMember(p => p.ProductGrossPrice, o => o.MapFrom(p => p.Product.GrossPrice))
+                .ForMember(p => p.ProductPercentageSale, o => o.MapFrom(p => p.Product.PercentageSale));
             CreateMap<Domain.Models.Order, OrderResource>();
             CreateMap<OrderDetails, OrderDetailsForOrderResource>();
             CreateMap<Domain.Models.PaymentMethod, PaymentMethodForOrderResource>();

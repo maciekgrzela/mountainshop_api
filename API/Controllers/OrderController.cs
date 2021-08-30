@@ -26,6 +26,12 @@ namespace API.Controllers
             return await Mediator.Send(new GetOrder.Query{Id = id});
         }
         
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<List<OrderResource>>> GetOrdersForUserAsync(string userId)
+        {
+            return await Mediator.Send(new GetOrdersForUser.Query { Id = userId });
+        }
+        
         [HttpGet("last/for/user/{userId}")]
         public async Task<ActionResult<OrderForUserResource>> GetLastOrderForUserAsync(string userId)
         {
