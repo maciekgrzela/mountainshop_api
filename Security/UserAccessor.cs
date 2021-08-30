@@ -14,10 +14,10 @@ namespace Security
         }
         
         
-        public string GetUserEmail()
+        public string GetUserName()
         {
-            var email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return email;
+            var name = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return name;
         }
     }
 }

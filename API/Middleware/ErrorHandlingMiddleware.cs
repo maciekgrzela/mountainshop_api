@@ -43,6 +43,8 @@ namespace API.Middleware
                 case { } ex:
                     errors = string.IsNullOrWhiteSpace(ex.Message) ? "Error" : ex.Message;
                     _logger.LogError(ex.StackTrace);
+                    _logger.LogInformation("-------------------------");
+                    _logger.LogError(ex.Message);
                     context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
                     break;
             }

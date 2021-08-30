@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Application.Errors;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 
 namespace Application.User
@@ -42,7 +44,7 @@ namespace Application.User
             
             public async Task<LoggedUserResource> Handle(Query request, CancellationToken cancellationToken)
             {
-                var user = await _userManager.FindByEmailAsync(request.Email);
+                var user = await _userManager.Users.Where(p => p.Email == request.Email && !p.UserName.Contains("fb") && !p.UserName.Contains("go")).FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
                 if (user == null)
                 {

@@ -34,7 +34,13 @@ namespace API.Controllers
         [HttpPost("register/facebook")]
         public async Task<ActionResult<LoggedUserResource>> RegisterCustomerWithFacebook(FacebookLogin.Query query)
         {
-            query.setRole("Customer");
+            return await Mediator.Send(query);
+        }
+        
+        [AllowAnonymous]
+        [HttpPost("register/google")]
+        public async Task<ActionResult<LoggedUserResource>> RegisterCustomerWithGoogle(GoogleLogin.Query query)
+        {
             return await Mediator.Send(query);
         }
 
@@ -52,6 +58,13 @@ namespace API.Controllers
         {
             query.setRole("Admin");
             return await Mediator.Send(query);
+        }
+
+        [HttpPut("update/data")]
+        public async Task<ActionResult> UpdateMyDataAsync(UpdateUsersData.Command data)
+        {
+            await Mediator.Send(data);
+            return NoContent();
         }
     }
 }

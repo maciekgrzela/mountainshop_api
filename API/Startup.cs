@@ -22,6 +22,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Domain.Models;
 using Infrastructure.Photos;
+using Infrastructure.SocialLogins;
 using Persistence.Context;
 using Security;
 using Stripe;
@@ -150,6 +151,10 @@ namespace API
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<IFacebookGraphAPIAccessor, FacebookGraphAPIAccessor>();
+            services.AddScoped<IGoogleAuthAccessor, GoogleAuthAccessor>();
+            services.Configure<FacebookAppSettings>(Configuration.GetSection("Authentication:Facebook"));
+            services.Configure<GoogleAppSettings>(Configuration.GetSection("Authentication:Google"));
             services.AddMediatR(typeof(Login.Handler).Assembly);
             services.AddAutoMapper(typeof(Login.Handler));
         }

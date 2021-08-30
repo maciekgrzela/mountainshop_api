@@ -28,7 +28,7 @@ namespace Application.User
             
             public async Task<LoggedUserResource> Handle(Query request, CancellationToken cancellationToken)
             {
-                var user = await _userManager.FindByEmailAsync(_userAccessor.GetUserEmail());
+                var user = await _userManager.FindByNameAsync(_userAccessor.GetUserName());
 
                 if (user == null)
                 {
