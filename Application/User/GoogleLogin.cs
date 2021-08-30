@@ -5,16 +5,14 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
-using Application.Validators;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Persistence.Context;
 
 namespace Application.User
 {
-    public class FacebookLogin
+    public class GoogleLogin
     {
         public class Query : IRequest<LoggedUserResource>
         {
@@ -33,20 +31,20 @@ namespace Application.User
         {
             private readonly UserManager<Domain.Models.User> _userManager;
             private readonly IWebTokenGenerator _webTokenGenerator;
-            private readonly IFacebookGraphAPIAccessor _facebookGraphApiAccessor;
+            private readonly IGoogleAuthAccessor _googleAuthAccessor;
             private readonly IMapper _mapper;
 
-            public Handler(UserManager<Domain.Models.User> userManager, IWebTokenGenerator webTokenGenerator, IFacebookGraphAPIAccessor facebookGraphApiAccessor, IMapper mapper)
+            public Handler(UserManager<Domain.Models.User> userManager, IWebTokenGenerator webTokenGenerator, IGoogleAuthAccessor googleAuthAccessor, IMapper mapper)
             {
                 _userManager = userManager;
                 _webTokenGenerator = webTokenGenerator;
-                _facebookGraphApiAccessor = facebookGraphApiAccessor;
+                _googleAuthAccessor = googleAuthAccessor;
                 _mapper = mapper;
             }
             
             public async Task<LoggedUserResource> Handle(Query request, CancellationToken cancellationToken)
             {
-                var userAccountInfo = await _facebookGraphApiAccessor.FacebookLogin(request.AccessToken);
+                var userAccountInfo = await _googleAuthAccessor.GoogleLogin(request.AccessToken);
 
                 if (userAccountInfo == null)
                 {
@@ -54,18 +52,18 @@ namespace Application.User
                         new {info = "Nie znaleziono użytkownika dla podanego identyfikatora"});
                 }
 
-                var user = await _userManager.FindByNameAsync($"fb_{userAccountInfo.Id}");
+                var user = await _userManager.FindByNameAsync($"go_{userAccountInfo.Id}");
 
                 if (user == null)
                 {
                     user = new Domain.Models.User
                     {
                         Id = Guid.NewGuid().ToString(),
-                        FirstName = userAccountInfo.Name.Split(' ', 2)[0],
-                        LastName = userAccountInfo.Name.Split(' ', 2)[1],
+                        FirstName = userAccountInfo.FirstName,
+                        LastName = userAccountInfo.LastName,
                         Email = userAccountInfo.Email,
-                        UserName = $"fb_{userAccountInfo.Id}",
-                        Image = userAccountInfo.Picture.Data.Url,
+                        UserName = $"go_{userAccountInfo.Id}",
+                        Image = userAccountInfo.Image,
                         Role = "Customer",
                         Comments = new List<Domain.Models.Comment>()
                     };

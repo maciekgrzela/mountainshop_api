@@ -24,7 +24,7 @@ namespace Security
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.NameId, user.Email),
+                new Claim(JwtRegisteredClaimNames.NameId, user.UserName),
                 new Claim(ClaimTypes.Role, role)
             };
 

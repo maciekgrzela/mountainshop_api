@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading;
@@ -11,6 +12,7 @@ using Domain.Models;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.User
 {
@@ -68,15 +70,15 @@ namespace Application.User
             
             public async Task<LoggedUserResource> Handle(Query request, CancellationToken cancellationToken)
             {
-                var existing = await _userManager.FindByEmailAsync(request.Email);
+                var existingEmail = await _userManager.Users.Where(p => p.Email == request.Email).ToListAsync(cancellationToken: cancellationToken);
 
-                if (existing != null)
+                if (existingEmail != null)
                 {
                     throw new RestException(HttpStatusCode.Unauthorized,
                         new {info = "Użytkownik dla podanego adresu e-mail już istnieje"});
                 }
 
-                existing = await _userManager.FindByNameAsync(request.UserName);
+                var existing = await _userManager.FindByNameAsync(request.UserName);
 
                 if (existing != null)
                 {
