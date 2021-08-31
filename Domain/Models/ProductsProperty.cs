@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Models
 {
-    public class ProductsProperty
+    public class ProductsProperty : BaseDateTimeInfoEntry
     {
         [Key]
         public Guid Id { get; set; }

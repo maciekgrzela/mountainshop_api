@@ -11,7 +11,6 @@ namespace API.Controllers
     public class CheckoutController : BaseController
     {
         [HttpPost("create/session/{userId}")]
-        [AllowAnonymous]
         public async Task<ActionResult> CreateSessionAsync(string userId)
         {
             var sessionUrl = await Mediator.Send(new CreateCheckoutSession.Command {Id = userId});

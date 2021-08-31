@@ -5,7 +5,7 @@ using static System.Double;
 
 namespace Domain.Models
 {
-    public class Product
+    public class Product : BaseDateTimeInfoEntry
     {
         [Key]
         public Guid Id { get; set; }
@@ -36,6 +36,5 @@ namespace Domain.Models
         [Required]
         public Category Category { get; set; }
         public List<Comment> Comments { get; set; }
-        public DateTime Created { get; set; }
     }
 }

@@ -28,6 +28,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> CreateAsync(CreatePaymentMethod.Command data)
         {
             await Mediator.Send(data);
@@ -35,6 +36,7 @@ namespace API.Controllers
         }
         
         [HttpPatch("{paymentId}/assign/delivery/{deliveryId}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> AssignPaymentToDeliveryAsync(Guid paymentId, Guid deliveryId)
         {
             await Mediator.Send(new AssignPaymentToDelivery.Command {PaymentId = paymentId, DeliveryId = deliveryId});
@@ -42,6 +44,7 @@ namespace API.Controllers
         }
         
         [HttpPatch("{paymentId}/remove/delivery/{deliveryId}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> RemovePaymentFromDeliveryAsync(Guid paymentId, Guid deliveryId)
         {
             await Mediator.Send(new AssignPaymentToDelivery.Command {PaymentId = paymentId, DeliveryId = deliveryId});
@@ -49,6 +52,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> UpdateAsync(Guid id, UpdatePaymentMethod.Command data)
         {
             data.SetId(id);
@@ -57,6 +61,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> DeleteAsync(Guid id)
         {
             await Mediator.Send(new DeletePaymentMethod.Command { Id = id });

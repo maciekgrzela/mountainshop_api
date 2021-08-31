@@ -26,11 +26,28 @@ namespace Application.Comment
         {
             public CommandValidator()
             {
-                RuleFor(p => p.Content).NotEmpty();
-                RuleFor(p => p.Title).NotEmpty();
-                RuleFor(p => p.Rate).GreaterThanOrEqualTo(0).LessThanOrEqualTo(5);
-                RuleFor(p => p.UserId).NotEmpty();
-                RuleFor(p => p.ProductId).NotEmpty();
+                RuleFor(p => p.Content)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Treść nie może być puste")
+                    .MaximumLength(1000).WithMessage("Pole Treść nie może zawierać więcej niż 1000 znaków");
+                
+                RuleFor(p => p.Title)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Tytuł nie może być puste")
+                    .MaximumLength(150).WithMessage("Pole Tytuł nie może zawierać więcej niż 150 znaków");
+                
+                RuleFor(p => p.Rate)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Głos nie może być puste")
+                    .GreaterThanOrEqualTo(0).WithMessage("Wartość pola Głos musi być większa lub równa 0")
+                    .LessThanOrEqualTo(5).WithMessage("Wartość pola Głos musi być mniejsza lub równa 5");
+                
+                RuleFor(p => p.UserId)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Identyfikator Użytkownika nie może być puste");
+                RuleFor(p => p.ProductId)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Identyfikator Produktu nie może być puste");
             }
         }
 

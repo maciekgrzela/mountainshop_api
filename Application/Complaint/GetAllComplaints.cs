@@ -34,9 +34,9 @@ namespace Application.Complaint
             public async Task<PagedList<ComplaintResource>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var complaints = _context.Complaints
-                                                    .Include(p => p.Order)
-                                                    .ProjectTo<ComplaintResource>(_mapper.ConfigurationProvider)
-                                                    .AsQueryable();
+                    .Include(p => p.Order)
+                    .ProjectTo<ComplaintResource>(_mapper.ConfigurationProvider)
+                    .AsQueryable();
 
                 complaints = FilterByOrderId(complaints, request.QueryParams);
 

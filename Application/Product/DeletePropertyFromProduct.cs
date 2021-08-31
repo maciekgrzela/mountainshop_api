@@ -23,8 +23,10 @@ namespace Application.Product
         {
             public CommandValidator()
             {
-                RuleFor(p => p.ProductId).NotEmpty();
-                RuleFor(p => p.PropertyId).NotEmpty();
+                RuleFor(p => p.ProductId)
+                    .NotEmpty().WithMessage("Pole Produkt nie może być puste");
+                RuleFor(p => p.PropertyId)
+                    .NotEmpty().WithMessage("Pole Właściwość nie może być puste");
             }
         }
         

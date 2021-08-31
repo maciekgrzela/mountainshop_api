@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
-    public class DeliveryMethod
+    public class DeliveryMethod : BaseDateTimeInfoEntry
     {
         [Key]
         public Guid Id { get; set; }

@@ -145,14 +145,14 @@ namespace API
                         }
                     };
                 });
-
-            services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
+            
             services.AddScoped<IWebTokenGenerator, WebTokenGenerator>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             services.AddScoped<IUserAccessor, UserAccessor>();
-            services.AddScoped<IFacebookGraphAPIAccessor, FacebookGraphAPIAccessor>();
+            services.AddScoped<IFacebookGraphApiAccessor, FacebookGraphApiAccessor>();
             services.AddScoped<IGoogleAuthAccessor, GoogleAuthAccessor>();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("Authentication:Cloudinary"));
             services.Configure<FacebookAppSettings>(Configuration.GetSection("Authentication:Facebook"));
             services.Configure<GoogleAppSettings>(Configuration.GetSection("Authentication:Google"));
             services.AddMediatR(typeof(Login.Handler).Assembly);
@@ -166,7 +166,6 @@ namespace API
             StripeConfiguration.ApiKey = Configuration.GetSection("StripeApiKey").Value;
             if (env.IsDevelopment())
             {
-                //app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }

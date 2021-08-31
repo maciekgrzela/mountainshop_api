@@ -14,4 +14,18 @@ namespace Application.Comment.Resources
         public int Likes { get; set; }
         public int Dislikes { get; set; }
     }
+
+    public class ProductForCommentsResource
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class UserForCommentsResource
+    {
+        public string Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    }
 }

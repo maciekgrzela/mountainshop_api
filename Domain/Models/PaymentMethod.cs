@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
-    public class PaymentMethod
+    public class PaymentMethod : BaseDateTimeInfoEntry
     {
         [Key]
         public Guid Id { get; set; }

@@ -24,12 +24,14 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult<ComplaintResource>> GetAsync(Guid id)
         {
             return await Mediator.Send(new GetComplaint.Query{Id = id});
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> CreateAsync(CreateCompliant.Command data)
         {
             await Mediator.Send(data);

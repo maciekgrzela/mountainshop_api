@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Order;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,19 +24,25 @@ namespace Application.Checkout
         {
             public string Id { get; set; }
         }
+        
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(p => p.Id).NotEmpty().NotNull();
+            }
+        }
 
         public class Handler : IRequestHandler<Command, string>
         {
             private readonly DataContext _context;
             private readonly UserManager<Domain.Models.User> _userManager;
-            private readonly IMediator _mediator;
             private IConfiguration Configuration { get; }
 
-            public Handler(DataContext context, UserManager<Domain.Models.User> userManager, IConfiguration configuration, IMediator mediator)
+            public Handler(DataContext context, UserManager<Domain.Models.User> userManager, IConfiguration configuration)
             {
                 _context = context;
                 _userManager = userManager;
-                _mediator = mediator;
                 Configuration = configuration;
             }
             

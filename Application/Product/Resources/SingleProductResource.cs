@@ -18,4 +18,10 @@ namespace Application.Product.Resources
         public List<PropertyValueForProductResource> ProductsPropertyValues { get; set; }
         public List<CommentForProductResource> Comments { get; set; }
     }
+
+    public class PropertyValueForProductResource
+    {
+        public Domain.Models.ProductsProperty ProductsProperty { get; set; }
+        public string Value { get; set; }
+    }
 }

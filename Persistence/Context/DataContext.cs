@@ -1,4 +1,7 @@
-﻿using Domain.Models;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +26,39 @@ namespace Persistence.Context
         public DbSet<Comment> Comments { get; set; }
         public DbSet<ContactRequest> ContactRequests { get; set; }
 
+        public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            OnBeforeSaving();
+            return base.SaveChanges(acceptAllChangesOnSuccess);
+        }
+
+        public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
+        {
+            OnBeforeSaving();
+            return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        private void OnBeforeSaving()
+        {
+            var entries = ChangeTracker.Entries<BaseDateTimeInfoEntry>();
+            var dateTimeNow = DateTime.Now;
+
+            foreach (var entry in entries)
+            {
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.LastModified = dateTimeNow;
+                    entry.Property(nameof(entry.Entity.Created)).IsModified = false;
+                }
+
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.Created = dateTimeNow;
+                    entry.Entity.LastModified = dateTimeNow;
+                }
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -33,7 +69,7 @@ namespace Persistence.Context
 
             modelBuilder.Entity<Complaint>()
                 .Property(p => p.Number)
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedOnAddOrUpdate();
 
             modelBuilder.Entity<Order>()
                 .Property(p => p.Number)

@@ -7,7 +7,7 @@ using FluentValidation;
 using MediatR;
 using Persistence.Context;
 
-namespace Application.Compliant
+namespace Application.Complaint
 {
     public class CreateCompliant
     {
@@ -22,9 +22,12 @@ namespace Application.Compliant
         {
             public CommandValidator()
             {
-                RuleFor(p => p.Abbreviation).NotEmpty();
-                RuleFor(p => p.OrderId).NotEmpty();
-                RuleFor(p => p.Description).NotEmpty();
+                RuleFor(p => p.Abbreviation)
+                    .NotEmpty().WithMessage("Pole Krótki Opis nie może być puste");
+                RuleFor(p => p.OrderId)
+                    .NotEmpty().WithMessage("Pole Identyfikator Zamówienia nie może być puste");
+                RuleFor(p => p.Description)
+                    .NotEmpty().WithMessage("Pole Opis nie może być puste");
             }
         }
         

@@ -32,8 +32,12 @@ namespace Application.DeliveryMethod
         {
             public CommandValidator()
             {
-                RuleFor(p => p.Name).NotEmpty();
-                RuleFor(p => p.Price).NotEmpty().GreaterThanOrEqualTo(0);
+                RuleFor(p => p.Name)
+                    .NotEmpty().WithMessage("Pole Imie nie może być puste")
+                    .MinimumLength(5).WithMessage("Pole Imię musi posiadać więcej niż 5 znaków");
+                RuleFor(p => p.Price)
+                    .NotEmpty().WithMessage("Pole Cena nie może być puste")
+                    .GreaterThanOrEqualTo(0).WithMessage("Pole Cena musi być większe lub równe zero");
             }
         }
         

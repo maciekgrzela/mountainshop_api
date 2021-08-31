@@ -28,6 +28,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> CreateAsync(CreateDeliveryMethod.Command data)
         {
             await Mediator.Send(data);
@@ -35,6 +36,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> UpdateAsync(Guid id, UpdateDeliveryMethod.Command data)
         {
             data.SetId(id);
@@ -43,6 +45,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> DeleteAsync(Guid id)
         {
             await Mediator.Send(new DeleteDeliveryMethod.Command { Id = id });

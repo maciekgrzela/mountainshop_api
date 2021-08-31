@@ -20,4 +20,17 @@ namespace Application.Product.Resources
         public ProducerForProductResource Producer { get; set; }
         public CategoryForProductResource Category { get; set; }
     }
+
+    public class ProducerForProductResource
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Image { get; set; }
+    }
+
+    public class CategoryForProductResource
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+    }
 }

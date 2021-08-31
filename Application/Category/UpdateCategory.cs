@@ -32,8 +32,15 @@ namespace Application.Category
         {
             public CommandValidator()
             {
-                RuleFor(p => p.Name).NotEmpty();
-                RuleFor(p => p.Description).NotEmpty();
+                RuleFor(p => p.Name)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Nazwa nie może być puste")
+                    .MinimumLength(5).WithMessage("Pole Nazwa musi posiadać co najmniej 5 znaków");
+                
+                RuleFor(p => p.Description)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Opis nie może być puste")
+                    .MaximumLength(1000).WithMessage("Pole Opis może posiadać co najwyżej 1000 znaków");
             }
         }
         

@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Category.Resources;
 using Application.Errors;
 using AutoMapper;
 using MediatR;

@@ -10,4 +10,10 @@ namespace Application.Complaint.Resources
         public string Description { get; set; }
         public OrderForComplaintResource Order { get; set; }
     }
+
+    public class OrderForComplaintResource
+    {
+        public Guid Id { get; set; }
+        public int Number { get; set; }
+    }
 }

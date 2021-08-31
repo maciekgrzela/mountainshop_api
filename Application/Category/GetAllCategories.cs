@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Category.Resources;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
@@ -28,7 +29,10 @@ namespace Application.Category
             
             public async Task<PagedList<CategoryResource>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var categories = _context.Categories.ProjectTo<CategoryResource>(_mapper.ConfigurationProvider).AsQueryable();
+                var categories = _context.Categories
+                    .ProjectTo<CategoryResource>(_mapper.ConfigurationProvider)
+                    .AsQueryable();
+                
                 var categoriesList = await PagedList<CategoryResource>.ToPagedListAsync(categories,
                     request.QueryParams.PageNumber, request.QueryParams.PageSize);
                 return categoriesList;

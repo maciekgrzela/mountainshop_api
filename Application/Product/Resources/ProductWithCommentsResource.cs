@@ -22,4 +22,21 @@ namespace Application.Product.Resources
         public CategoryForProductResource Category { get; set; }
         public List<CommentForProductResource> Comments { get; set; }
     }
+
+    public class CommentForProductResource
+    {
+        public Guid Id { get; set; }
+        public string Content { get; set; }
+        public UserForProductsCommentResource User { get; set; }
+        public DateTime Created { get; set; }
+        public double Rate { get; set; }
+        public int Likes { get; set; }
+        public int Dislikes { get; set; }
+    }
+
+    public class UserForProductsCommentResource
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    }
 }

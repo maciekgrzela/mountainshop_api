@@ -6,8 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Photo;
+using Application.Product.Validators;
 using AutoMapper;
 using Domain.Models;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +37,54 @@ namespace Application.Product
         {
             public Guid ProductsPropertyId { get; set; }
             public string Value { get; set; }
+        }
+        
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(p => p.Name)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Nazwa nie może być puste")
+                    .MinimumLength(5).WithMessage("Pole Nazwa musi posiadać co najmniej 5 znaków")
+                    .MaximumLength(20).WithMessage("Pole Nazwa może posiadać co najwyżej 20 znaków");
+                
+                RuleFor(p => p.Description)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Opis nie może być puste")
+                    .MaximumLength(2000).WithMessage("Pole Opis może posiadać co najwyżej 2000 znaków");
+                
+                RuleFor(p => p.AmountInStorage)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Stan Magazynowy nie może być puste")
+                    .GreaterThanOrEqualTo(0).WithMessage("Wartość pola Stan Magazynowy musi być większa od zera");
+                
+                RuleFor(p => p.NetPrice)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Cena Netto nie może być puste")
+                    .GreaterThanOrEqualTo(0).WithMessage("Wartość pola Cena Netto musi być większa lub równa zero");
+                
+                RuleFor(p => p.PercentageTax)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Podatek nie może być puste")
+                    .GreaterThanOrEqualTo(0).WithMessage("Wartość pola Podatek musi być większa lub równa zero")
+                    .LessThanOrEqualTo(100).WithMessage("Wartość pola Podatek musi być mniejsza lub równa sto");
+                
+                RuleFor(p => p.Gender)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Płeć nie może być puste")
+                    .Must(ProductsCustomValidators.GenderIsValid).WithMessage("Pole Płeć musi posiadać jedną z dozwolonych wartości (male/female/unisex)");
+                
+                RuleFor(p => p.MinimalOrderedAmount)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Minimalne Zamówienie nie może być puste")
+                    .GreaterThanOrEqualTo(0).WithMessage("Wartość pola Minimalne Zamówienie musi być większa lub równa zero");
+                
+                RuleFor(p => p.ProducerId)
+                    .NotEmpty().WithMessage("Pole Producent nie może być puste");
+                RuleFor(p => p.CategoryId)
+                    .NotEmpty().WithMessage("Pole Kategoria nie może być puste");
+            }
         }
 
         public class Handler : IRequestHandler<Command, Unit>

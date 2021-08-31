@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Domain.Models;
+using FluentValidation;
 using MediatR;
 using Persistence.Context;
 
@@ -20,6 +21,17 @@ namespace Application.ProductsProperty
         public class Request
         {
             public string Value { get; set; }
+        }
+        
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(p => p.ProductId)
+                    .NotEmpty().WithMessage("Pole Produkt nie może być puste");
+                RuleFor(p => p.PropertyId)
+                    .NotEmpty().WithMessage("Pole Właściwość nie może być puste");
+            }
         }
         
         public class Handler : IRequestHandler<Command, Unit>

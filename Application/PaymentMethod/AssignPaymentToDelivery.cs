@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Domain.Models;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
@@ -16,6 +17,17 @@ namespace Application.PaymentMethod
         {
             public Guid DeliveryId { get; set; }
             public Guid PaymentId { get; set; }
+        }
+        
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(p => p.DeliveryId)
+                    .NotEmpty().WithMessage("Pole Dostawy nie może być puste");
+                RuleFor(p => p.PaymentId)
+                    .NotEmpty().WithMessage("Pole Płatności nie może być puste");
+            }
         }
         
         public class MyClass : IRequestHandler<Command, Unit>

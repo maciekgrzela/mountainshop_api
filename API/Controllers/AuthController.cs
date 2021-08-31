@@ -26,7 +26,7 @@ namespace API.Controllers
         [HttpPost("register/customer")]
         public async Task<ActionResult<LoggedUserResource>> RegisterCustomerAsync(Register.Query query)
         {
-            query.setRole("Customer");
+            query.SetRole("Customer");
             return await Mediator.Send(query);
         }
 
@@ -48,7 +48,7 @@ namespace API.Controllers
         [HttpPost("register/owner")]
         public async Task<ActionResult<LoggedUserResource>> RegisterOwnerAsync(Register.Query query)
         {
-            query.setRole("Owner");
+            query.SetRole("Owner");
             return await Mediator.Send(query);
         }
 
@@ -56,7 +56,7 @@ namespace API.Controllers
         [HttpPost("register/admin")]
         public async Task<ActionResult<LoggedUserResource>> RegisterAdminAsync(Register.Query query)
         {
-            query.setRole("Admin");
+            query.SetRole("Admin");
             return await Mediator.Send(query);
         }
 

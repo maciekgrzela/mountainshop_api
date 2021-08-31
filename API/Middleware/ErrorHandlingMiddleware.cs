@@ -11,12 +11,10 @@ namespace API.Middleware
     public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger<ErrorHandlingMiddleware> _logger;
 
-        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
+        public ErrorHandlingMiddleware(RequestDelegate next)
         {
             _next = next;
-            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
@@ -27,11 +25,11 @@ namespace API.Middleware
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex, _logger);
+                await HandleExceptionAsync(context, ex);
             }
         }
 
-        private async Task HandleExceptionAsync(HttpContext context, Exception exception, ILogger<ErrorHandlingMiddleware> logger)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             object errors = null;
             switch (exception)
@@ -42,9 +40,6 @@ namespace API.Middleware
                     break;
                 case { } ex:
                     errors = string.IsNullOrWhiteSpace(ex.Message) ? "Error" : ex.Message;
-                    _logger.LogError(ex.StackTrace);
-                    _logger.LogInformation("-------------------------");
-                    _logger.LogError(ex.Message);
                     context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
                     break;
             }

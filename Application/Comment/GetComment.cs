@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.Comment.Resources;
 using Application.Errors;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Persistence.Context;
 
@@ -15,6 +16,15 @@ namespace Application.Comment
         public class Query : IRequest<CommentResource>
         {
             public Guid Id { get; set; }
+        }
+        
+        public class QueryValidator : AbstractValidator<Query>
+        {
+            public QueryValidator()
+            {
+                RuleFor(p => p.Id)
+                    .NotEmpty().WithMessage("Pole Identyfikator nie może być puste");
+            }
         }
 
         public class Handler : IRequestHandler<Query, CommentResource>

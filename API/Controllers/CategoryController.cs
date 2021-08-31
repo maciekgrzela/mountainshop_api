@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Application;
 using Application.Category;
+using Application.Category.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,12 +26,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> CreateAsync([FromForm] CreateCategory.Command data)
         {
             await Mediator.Send(data);
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin,Owner")]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateAsync(Guid id, UpdateCategory.Command data)
         {
@@ -39,6 +42,7 @@ namespace API.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin,Owner")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(Guid id)
         {

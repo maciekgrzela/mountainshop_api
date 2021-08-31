@@ -33,10 +33,10 @@ namespace Application.User
         {
             private readonly UserManager<Domain.Models.User> _userManager;
             private readonly IWebTokenGenerator _webTokenGenerator;
-            private readonly IFacebookGraphAPIAccessor _facebookGraphApiAccessor;
+            private readonly IFacebookGraphApiAccessor _facebookGraphApiAccessor;
             private readonly IMapper _mapper;
 
-            public Handler(UserManager<Domain.Models.User> userManager, IWebTokenGenerator webTokenGenerator, IFacebookGraphAPIAccessor facebookGraphApiAccessor, IMapper mapper)
+            public Handler(UserManager<Domain.Models.User> userManager, IWebTokenGenerator webTokenGenerator, IFacebookGraphApiAccessor facebookGraphApiAccessor, IMapper mapper)
             {
                 _userManager = userManager;
                 _webTokenGenerator = webTokenGenerator;

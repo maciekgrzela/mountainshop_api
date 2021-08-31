@@ -47,15 +47,35 @@ namespace Application.Order
         {
             public CommandValidator()
             {
-                RuleFor(p => p.UserId).NotEmpty();
-                RuleFor(p => p.AddressLineOne).NotEmpty();
-                RuleFor(p => p.PostalCode).NotEmpty();
-                RuleFor(p => p.Place).NotEmpty();
-                RuleFor(p => p.Country).NotEmpty();
-                RuleFor(p => p.PhoneNumber).NotEmpty();
-                RuleFor(p => p.PaymentMethodId).NotEmpty();
-                RuleFor(p => p.DeliveryMethodId).NotEmpty();
-                RuleFor(p => p.OrderedProducts).NotEmpty();
+                RuleFor(p => p.UserId)
+                    .NotEmpty().WithMessage("Pole Identyfikator Użytkownika nie może być puste");
+                RuleFor(p => p.AddressLineOne)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Adresu nie może być puste")
+                    .MaximumLength(200).WithMessage("Pole Adresu nie może posiadać więcej niż 200 znaków");
+                RuleFor(p => p.PostalCode)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Kod Pocztowy nie może być puste")
+                    .Length(6).WithMessage("Pole Kod Pocztowy musi posiadać 6 znaków");
+                RuleFor(p => p.Place)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Miejsce/Miasto nie może być puste")
+                    .MaximumLength(200).WithMessage("Pole Miejsce/Miasto nie może posiadać więcej niż 200 znaków");
+                RuleFor(p => p.Country)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Kraj nie może być puste")
+                    .MaximumLength(150).WithMessage("Pole Kraj nie może posiadać więcej niż 150 znaków");
+                RuleFor(p => p.PhoneNumber)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Numer Telefonu nie może być puste")
+                    .MinimumLength(12).WithMessage("Pole Numer Telefonu nie może posiadać mniej niż 12 znaków")
+                    .MinimumLength(12).WithMessage("Pole Numer Telefonu nie może posiadać mniej niż 12 znaków");
+                RuleFor(p => p.PaymentMethodId)
+                    .NotEmpty().WithMessage("Pole Metoda Płatności nie może być puste");
+                RuleFor(p => p.DeliveryMethodId)
+                    .NotEmpty().WithMessage("Pole Metoda Dostawy nie może być puste");
+                RuleFor(p => p.OrderedProducts)
+                    .NotEmpty().WithMessage("Pole Zamówione Produkty nie może być puste");
             }
         }
         
