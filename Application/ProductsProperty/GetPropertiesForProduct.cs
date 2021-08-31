@@ -8,6 +8,7 @@ using Application.Errors;
 using Application.Product.Resources;
 using AutoMapper;
 using Domain.Models;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
@@ -19,6 +20,15 @@ namespace Application.ProductsProperty
         public class Query : IRequest<List<PropertyValueForProductResource>>
         {
             public Guid Id { get; set; }
+        }
+        
+        public class QueryValidator : AbstractValidator<Query>
+        {
+            public QueryValidator()
+            {
+                RuleFor(p => p.Id)
+                    .NotEmpty().WithMessage("Pole Identyfikator nie może być puste");
+            }
         }
         
         public class Handler : IRequestHandler<Query, List<PropertyValueForProductResource>>

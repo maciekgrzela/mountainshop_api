@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.Errors;
 using Application.Order.Resources;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
@@ -16,6 +17,15 @@ namespace Application.Order
         public class Query : IRequest<OrderResource>
         {
             public Guid Id { get; set; }
+        }
+        
+        public class QueryValidator : AbstractValidator<Query>
+        {
+            public QueryValidator()
+            {
+                RuleFor(p => p.Id)
+                    .NotEmpty().WithMessage("Pole Identyfikator nie może być puste");
+            }
         }
         
         public class Handler : IRequestHandler<Query, OrderResource>

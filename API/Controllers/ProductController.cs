@@ -33,25 +33,15 @@ namespace API.Controllers
         }
         
         [HttpPost]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> CreateProductAsync(CreateProduct.Command data)
         {
             await Mediator.Send(data);
             return NoContent();
         }
-        
-        [HttpPost("list")]
-        [AllowAnonymous]
-        public async Task<ActionResult> CreateProductsRangeAsync(List<CreateProduct.Command> data)
-        {
-            foreach (var product in data)
-            {
-                await Mediator.Send(product);
-            }
-            
-            return NoContent();
-        }
-        
+
         [HttpPost("photo/upload")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> UploadPhotoAsync([FromForm] UploadProductsImage.Command data)
         {
             await Mediator.Send(data);
@@ -60,6 +50,7 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpPatch("{productsId}/property/{propertyId}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> AddPropertyToProduct(Guid productsId, Guid propertyId, AddPropertyToProduct.Request data)
         {
             await Mediator.Send(new AddPropertyToProduct.Command {ProductId = productsId, PropertyId = propertyId, Value = data.Value});
@@ -67,6 +58,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> UpdateProductAsync(UpdateProduct.Command data)
         {
             await Mediator.Send(data);
@@ -74,6 +66,7 @@ namespace API.Controllers
         }
 
         [HttpPatch("{id}/sale/add")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> SetProductsSaleAsync(Guid id, SetProductsSale.Command data)
         {
             data.SetId(id);
@@ -82,6 +75,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> DeleteProductAsync(Guid id)
         {
             await Mediator.Send(new DeleteProduct.Command {Id = id});
@@ -89,6 +83,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{productId}/property/{propertyId}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> DeleteProductsPropertyValueForProductAsync(Guid productId, Guid propertyId)
         {
             await Mediator.Send(new DeletePropertyFromProduct.Command {ProductId = productId, PropertyId = propertyId});

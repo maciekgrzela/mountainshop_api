@@ -11,12 +11,11 @@ namespace Security
 {
     public class WebTokenGenerator : IWebTokenGenerator
     {
-        private readonly SymmetricSecurityKey key;
-        
-        
+        private readonly SymmetricSecurityKey _key;
+
         public WebTokenGenerator()
         {
-            key = SecurityKeyGenerator.Instance.GetKey();
+            _key = SecurityKeyGenerator.Instance.GetKey();
         }
         
         
@@ -24,11 +23,11 @@ namespace Security
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.NameId, user.UserName),
-                new Claim(ClaimTypes.Role, role)
+                new(JwtRegisteredClaimNames.NameId, user.UserName),
+                new(ClaimTypes.Role, role)
             };
 
-            var credentials = new SigningCredentials(this.key, SecurityAlgorithms.HmacSha512Signature);
+            var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

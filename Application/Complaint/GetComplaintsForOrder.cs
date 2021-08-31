@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Application.Complaint.Resources;
 using Application.Errors;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
@@ -18,6 +19,15 @@ namespace Application.Complaint
         public class Query : IRequest<List<ComplaintResource>>
         {
             public Guid Id { get; set; }
+        }
+        
+        public class QueryValidator : AbstractValidator<Query>
+        {
+            public QueryValidator()
+            {
+                RuleFor(p => p.Id)
+                    .NotEmpty().WithMessage("Pole Identyfikator nie może być puste");
+            }
         }
 
         public class Handler : IRequestHandler<Query, List<ComplaintResource>>

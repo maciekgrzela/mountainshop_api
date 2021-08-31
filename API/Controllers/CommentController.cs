@@ -30,6 +30,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> CreateAsync(CreateComment.Command data)
         {
             await Mediator.Send(data);
@@ -69,6 +70,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> UpdateAsync(Guid id, UpdateComment.Command data)
         {
             data.SetId(id);

@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Comment.Validators;
 using Application.Errors;
 using FluentValidation;
 using MediatR;
@@ -21,8 +22,10 @@ namespace Application.Comment
         {
             public CommandValidator()
             {
-                RuleFor(p => p.Id).NotEmpty();
-                RuleFor(p => p.Vote).Must(p => p.Equals("like") || p.Equals("dislike"));
+                RuleFor(p => p.Id)
+                    .NotEmpty().WithMessage("Pole Identyfikator nie może być puste");
+                RuleFor(p => p.Vote)
+                    .Must(CommentCustomValidators.ValidVote).WithMessage("Pole Głos musi posiadać jedną z dozwolonych wartości (like/dislike)");
             }
         }
 

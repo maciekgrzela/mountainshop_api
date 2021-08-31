@@ -12,8 +12,7 @@ namespace Security
         {
             _httpContextAccessor = httpContextAccessor;
         }
-        
-        
+
         public string GetUserName()
         {
             var name = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);

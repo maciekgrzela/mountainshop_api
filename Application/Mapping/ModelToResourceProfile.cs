@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Application.Category;
+using Application.Category.Resources;
 using Application.Comment.Resources;
 using Application.Complaint.Resources;
 using Application.DeliveryMethod.Resources;

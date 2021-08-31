@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class InitialMigration1908 : Migration
+    public partial class InitialMigration3108 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -57,11 +57,30 @@ namespace Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ContactRequests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContactRequests", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -71,7 +90,8 @@ namespace Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
-                    Takeaway = table.Column<bool>(type: "bit", nullable: false)
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -84,7 +104,10 @@ namespace Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<double>(type: "float", nullable: false)
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    ExternalApi = table.Column<bool>(type: "bit", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -96,9 +119,11 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -110,7 +135,9 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -233,14 +260,14 @@ namespace Persistence.Migrations
                     PostalCode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
                     Place = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Country = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     CompanyName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    CompanyNip = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    CompanyNip = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     CompanyAddressLineOne = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     CompanyPostalCode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
                     CompanyPlace = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     CompanyCountry = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
-                    CompanyPhoneNumber = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: true)
+                    CompanyPhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -251,6 +278,30 @@ namespace Persistence.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DeliveryMethodPaymentMethod",
+                columns: table => new
+                {
+                    DeliveryMethodsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PaymentMethodsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeliveryMethodPaymentMethod", x => new { x.DeliveryMethodsId, x.PaymentMethodsId });
+                    table.ForeignKey(
+                        name: "FK_DeliveryMethodPaymentMethod_DeliveryMethods_DeliveryMethodsId",
+                        column: x => x.DeliveryMethodsId,
+                        principalTable: "DeliveryMethods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DeliveryMethodPaymentMethod_PaymentMethods_PaymentMethodsId",
+                        column: x => x.PaymentMethodsId,
+                        principalTable: "PaymentMethods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -266,8 +317,12 @@ namespace Persistence.Migrations
                     PercentageTax = table.Column<double>(type: "float", nullable: false),
                     GrossPrice = table.Column<double>(type: "float", nullable: false),
                     MinimalOrderedAmount = table.Column<int>(type: "int", nullable: false),
+                    PercentageSale = table.Column<double>(type: "float", nullable: true),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProducerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -291,17 +346,14 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Number = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Number = table.Column<int>(type: "int", nullable: false),
                     OrderDetailsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PaymentMethodId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DeliveryMethodId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    NetPrice = table.Column<double>(type: "float", nullable: false),
-                    PercentageTax = table.Column<double>(type: "float", nullable: false),
-                    GrossPrice = table.Column<double>(type: "float", nullable: false),
-                    TotalAmount = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WarrantyIsInForce = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    WarrantyIsInForce = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -331,13 +383,15 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Rate = table.Column<double>(type: "float", nullable: false),
                     Likes = table.Column<int>(type: "int", nullable: false),
-                    Dislikes = table.Column<int>(type: "int", nullable: false)
+                    Dislikes = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -387,11 +441,12 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Number = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Number = table.Column<int>(type: "int", nullable: false),
                     Abbreviation = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -400,6 +455,32 @@ namespace Persistence.Migrations
                         name: "FK_Complaints_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderedProduct",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Amount = table.Column<double>(type: "float", nullable: false),
+                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderedProduct", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrderedProduct_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderedProduct_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -491,9 +572,24 @@ namespace Persistence.Migrations
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DeliveryMethodPaymentMethod_PaymentMethodsId",
+                table: "DeliveryMethodPaymentMethod",
+                column: "PaymentMethodsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderDetails_UserId",
                 table: "OrderDetails",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderedProduct_OrderId",
+                table: "OrderedProduct",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderedProduct_ProductId",
+                table: "OrderedProduct",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_DeliveryMethodId",
@@ -514,8 +610,7 @@ namespace Persistence.Migrations
                 name: "IX_Producers_Name",
                 table: "Producers",
                 column: "Name",
-                unique: true,
-                filter: "[Name] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",
@@ -583,6 +678,15 @@ namespace Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Complaints");
+
+            migrationBuilder.DropTable(
+                name: "ContactRequests");
+
+            migrationBuilder.DropTable(
+                name: "DeliveryMethodPaymentMethod");
+
+            migrationBuilder.DropTable(
+                name: "OrderedProduct");
 
             migrationBuilder.DropTable(
                 name: "ProductsOrders");

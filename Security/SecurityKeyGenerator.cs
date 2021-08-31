@@ -19,9 +19,9 @@ namespace Security
 
         private SecurityKeyGenerator()
         {
-            TripleDESCryptoServiceProvider tripleDes = new TripleDESCryptoServiceProvider();
+            var tripleDes = new TripleDESCryptoServiceProvider();
             tripleDes.GenerateKey();
-            key = new SymmetricSecurityKey(Encoding.Unicode.GetBytes(tripleDes.Key.ToString()));
+            key = new SymmetricSecurityKey(Encoding.Unicode.GetBytes(tripleDes.Key.ToString() ?? string.Empty));
         }
 
         public SymmetricSecurityKey GetKey()

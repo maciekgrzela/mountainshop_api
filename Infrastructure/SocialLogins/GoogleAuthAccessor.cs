@@ -37,12 +37,10 @@ namespace Infrastructure.SocialLogins
             }
 
 
-            if (!success)
-            {
-                return null;
-            }
+            if (!success) return null;
 
-            return new GoogleUserInfo
+            
+            return new GoogleUserInfo 
             {
                 Id = user.Subject,
                 Email = user.Email,

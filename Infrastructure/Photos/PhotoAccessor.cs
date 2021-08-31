@@ -52,10 +52,5 @@ namespace Infrastructure.Photos
                 Url = uploadResult.SecureUrl.AbsoluteUri
             };
         }
-
-        public string DeletePhoto(string publicId)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

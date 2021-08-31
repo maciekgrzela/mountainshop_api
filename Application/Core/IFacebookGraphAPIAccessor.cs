@@ -3,7 +3,7 @@ using Application.User;
 
 namespace Application
 {
-    public interface IFacebookGraphAPIAccessor
+    public interface IFacebookGraphApiAccessor
     {
         public Task<FacebookUserInfo> FacebookLogin(string accessToken);
     }

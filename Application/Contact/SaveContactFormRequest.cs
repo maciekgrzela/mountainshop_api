@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Domain.Models;
+using FluentValidation;
 using MediatR;
 using Persistence.Context;
 
@@ -15,6 +16,30 @@ namespace Application.Contact
             public string LastName { get; set; }
             public string Email { get; set; }
             public string Content { get; set; }
+        }
+        
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(p => p.FirstName)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Imie nie może być puste")
+                    .MaximumLength(100).WithMessage("Pole Imie nie może posiadać więcej niż 100 znaków");
+                RuleFor(p => p.LastName)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Nazwisko nie może być puste")
+                    .MaximumLength(100).WithMessage("Pole Nazwisko nie może posiadać więcej niż 100 znaków");
+                RuleFor(p => p.Email)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Email nie może być puste")
+                    .EmailAddress().WithMessage("Pole Email musi posiadać odpowiedni format")
+                    .MaximumLength(100).WithMessage("Pole Email nie może posiadać więcej niż 100 znaków");
+                RuleFor(p => p.Content)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Zawartość nie może być puste")
+                    .MaximumLength(1000).WithMessage("Pole Zawartość nie może posiadać więcej niż 1000 znaków");
+            }
         }
         
         public class Handler : IRequestHandler<Command, Unit>

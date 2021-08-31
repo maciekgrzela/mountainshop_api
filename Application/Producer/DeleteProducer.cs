@@ -20,7 +20,8 @@ namespace Application.Producer
         {
             public CommandValidator()
             {
-                RuleFor(p => p.Id).NotEmpty();
+                RuleFor(p => p.Id)
+                    .NotEmpty().WithMessage("Pole Identyfikator nie może być puste");
             }
         }
         

@@ -8,12 +8,12 @@ using Microsoft.Extensions.Options;
 
 namespace Infrastructure.SocialLogins
 {
-    public class FacebookGraphAPIAccessor : IFacebookGraphAPIAccessor
+    public class FacebookGraphApiAccessor : IFacebookGraphApiAccessor
     {
         private readonly IOptions<FacebookAppSettings> _options;
         private readonly HttpClient _client;
 
-        public FacebookGraphAPIAccessor(IOptions<FacebookAppSettings> options)
+        public FacebookGraphApiAccessor(IOptions<FacebookAppSettings> options)
         {
             _options = options;
             _client = new HttpClient

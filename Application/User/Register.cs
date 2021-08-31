@@ -28,12 +28,12 @@ namespace Application.User
             public string Password { get; set; }
             private string _role;
 
-            public void setRole(string role)
+            public void SetRole(string role)
             {
                 _role = role;
             }
 
-            public string getRole()
+            public string GetRole()
             {
                 return _role;
             }
@@ -94,7 +94,7 @@ namespace Application.User
                     UserName = request.UserName,
                     Email = request.Email,
                     PhoneNumber = request.PhoneNumber,
-                    Role = request.getRole(),
+                    Role = request.GetRole(),
                     Comments = new List<Domain.Models.Comment>()
                 };
 
@@ -106,12 +106,12 @@ namespace Application.User
                         new {info = "Użytkownik dla podanego loginu już istnieje"});
                 }
 
-                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, request.getRole()));
+                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, request.GetRole()));
                 await _userManager.AddToRoleAsync(user, "Customer");
 
                 var loggedUser = _mapper.Map<Domain.Models.User, LoggedUserResource>(user);
 
-                loggedUser.Token = _webTokenGenerator.CreateToken(user, request.getRole());
+                loggedUser.Token = _webTokenGenerator.CreateToken(user, request.GetRole());
 
                 return loggedUser;
             }

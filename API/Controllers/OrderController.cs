@@ -53,6 +53,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> DeleteAsync(Guid id)
         {
             await Mediator.Send(new DeleteOrder.Command { Id = id });

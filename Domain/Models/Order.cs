@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
-    public class Order
+    public class Order : BaseDateTimeInfoEntry
     {
         [Key]
         public Guid Id { get; set; }
@@ -25,8 +25,6 @@ namespace Domain.Models
         [Required]
         public List<OrderedProduct> OrderedProducts { get; set; }
         public string Status { get; set; }
-        [Required]
-        public DateTime Created { get; set; }
         [Required]
         public DateTime WarrantyIsInForce { get; set; }
     }

@@ -25,8 +25,15 @@ namespace Application.Category
         {
             public CommandValidator()
             {
-                RuleFor(p => p.Name).NotEmpty();
-                RuleFor(p => p.Description).NotEmpty();
+                RuleFor(p => p.Name)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Nazwa nie może być puste")
+                    .MinimumLength(5).WithMessage("Pole Nazwa musi posiadać co najmniej 5 znaków");
+                
+                RuleFor(p => p.Description)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Opis nie może być puste")
+                    .MaximumLength(1000).WithMessage("Pole Opis może posiadać co najwyżej 1000 znaków");
             }
         }
         
@@ -45,23 +52,26 @@ namespace Application.Category
             
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                PhotoUploadResult uploadedImage;
+                PhotoUploadResult uploadedImage = null;
+                if (request.Image != null)
+                {
+                    try
+                    {
+                        uploadedImage = _photoAccessor.AddPhoto(request.Image);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new RestException(HttpStatusCode.BadRequest, new {info = e.Message});
+                    }
+                }
                 
-                try
-                {
-                    uploadedImage = _photoAccessor.AddPhoto(request.Image);
-                }
-                catch (Exception e)
-                {
-                    throw new RestException(HttpStatusCode.BadRequest, new {info = e.Message});
-                }
                 
                 var category = new Domain.Models.Category
                 {
                     Id = Guid.NewGuid(),
                     Description = request.Description,
                     Name = request.Name,
-                    Image = uploadedImage.Url,
+                    Image = uploadedImage?.Url,
                 };
 
                 await _context.Categories.AddAsync(category, cancellationToken);

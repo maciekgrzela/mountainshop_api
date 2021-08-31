@@ -32,8 +32,16 @@ namespace Application.Comment
         {
             public CommandValidator()
             {
-                RuleFor(p => p.Content).NotEmpty();
-                RuleFor(p => p.Rate).GreaterThanOrEqualTo(0).LessThanOrEqualTo(5);
+                RuleFor(p => p.Content)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Treść nie może być puste")
+                    .MaximumLength(1000).WithMessage("Pole Treść nie może zawierać więcej niż 1000 znaków");
+
+                RuleFor(p => p.Rate)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Głos nie może być puste")
+                    .GreaterThanOrEqualTo(0).WithMessage("Wartość pola Głos musi być większa lub równa 0")
+                    .LessThanOrEqualTo(5).WithMessage("Wartość pola Głos musi być mniejsza lub równa 5");
             }
         }
 

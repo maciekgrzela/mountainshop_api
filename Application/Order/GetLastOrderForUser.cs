@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Application.Errors;
 using Application.Order.Resources;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,15 @@ namespace Application.Order
         public class Query : IRequest<OrderForUserResource>
         {
             public string Id { get; set; }
+        }
+        
+        public class QueryValidator : AbstractValidator<Query>
+        {
+            public QueryValidator()
+            {
+                RuleFor(p => p.Id)
+                    .NotEmpty().WithMessage("Pole Identyfikator nie może być puste");
+            }
         }
         
         public class Handler : IRequestHandler<Query, OrderForUserResource>

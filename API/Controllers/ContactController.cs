@@ -12,6 +12,7 @@ namespace API.Controllers
     {
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<List<ContactRequest>> GetAllContactRequestsAsync()
         {
             return await Mediator.Send(new GetAllContactRequests.Query());

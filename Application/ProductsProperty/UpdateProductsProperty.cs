@@ -31,7 +31,8 @@ namespace Application.ProductsProperty
         {
             public CommandValidator()
             {
-                RuleFor(p => p.Name).NotEmpty();
+                RuleFor(p => p.Name)
+                    .NotEmpty().WithMessage("Pole Nazwa nie może być puste");
             }
         }
         

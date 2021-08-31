@@ -34,9 +34,16 @@ namespace Application.PaymentMethod
         {
             public CommandValidator()
             {
-                RuleFor(p => p.Name).NotEmpty();
-                RuleFor(p => p.Price).NotEmpty().GreaterThanOrEqualTo(0);
-                RuleFor(p => p.ExternalApi).NotEmpty();
+                RuleFor(p => p.Name)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Nazwa nie może być puste")
+                    .MinimumLength(10).WithMessage("Pole Nazwa musi posiadać co najmniej 10 znaków");
+                RuleFor(p => p.Price)
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty().WithMessage("Pole Cena nie może być puste")
+                    .GreaterThanOrEqualTo(0).WithMessage("Wartość pola Cena musi być większa lub równa zero");
+                RuleFor(p => p.ExternalApi)
+                    .NotEmpty().WithMessage("Pole Obsługi Zewnętrznego Dostawcy nie może być puste");
             }
         }
         
