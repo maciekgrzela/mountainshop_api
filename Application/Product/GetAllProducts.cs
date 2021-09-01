@@ -50,8 +50,8 @@ namespace Application.Product
                 products = FilterByCategoryId(products, request.QueryParams);
                 products = FilterBySale(products, request.QueryParams);
                 products = FilterByDate(products, request.QueryParams);
-                products = await FilterByCommentsRating(products, request.QueryParams);
-                products = await FilterByCommentsCount(products, request.QueryParams);
+                products = FilterByCommentsRating(products, request.QueryParams);
+                products = FilterByCommentsCount(products, request.QueryParams);
                 products = SortByGrossPrice(products, request.QueryParams);
 
                 var productsList = await products.ToListAsync(cancellationToken: cancellationToken);
@@ -62,7 +62,7 @@ namespace Application.Product
                 return productsResources;
             }
 
-            private async Task<IQueryable<ProductWithCommentsResource>> FilterByCommentsCount(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
+            private IQueryable<ProductWithCommentsResource> FilterByCommentsCount(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
             {
                 if (requestQueryParams.CommentsCountDesc != null)
                 {
@@ -72,7 +72,7 @@ namespace Application.Product
                 return products;
             }
 
-            private async Task<IQueryable<ProductWithCommentsResource>> FilterByCommentsRating(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
+            private IQueryable<ProductWithCommentsResource> FilterByCommentsRating(IQueryable<ProductWithCommentsResource> products, ProductParams requestQueryParams)
             {
                 if (requestQueryParams.BestRatingDesc != null)
                 {
@@ -191,27 +191,6 @@ namespace Application.Product
 
                 return products;
             }
-        }
-    }
-
-    internal class RatingsComparer : IComparer<ProductResource>
-    {
-        private readonly List<Guid> _ratingGuids;
-
-        public RatingsComparer(List<Guid> ratingGuids)
-        {
-            _ratingGuids = ratingGuids;
-        }
-
-        public int Compare(ProductResource? x, ProductResource? y)
-        {
-            if (x == null || y == null) return 0;
-            
-            var xPosition = _ratingGuids.IndexOf(x.Id);
-            var yPosition = _ratingGuids.IndexOf(y.Id);
-
-            return xPosition - yPosition;
-
         }
     }
 }
