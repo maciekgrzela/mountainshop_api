@@ -5,6 +5,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using Application.Validators;
 using AutoMapper;
@@ -74,7 +75,7 @@ namespace Application.User
 
                 if (existingEmail.Count > 0)
                 {
-                    throw new RestException(HttpStatusCode.Unauthorized,
+                    throw new RestException(HandlerResponse.ClientIsNotAuthorized,
                         new {info = "Użytkownik dla podanego adresu e-mail już istnieje"});
                 }
 
@@ -82,7 +83,7 @@ namespace Application.User
 
                 if (existing != null)
                 {
-                    throw new RestException(HttpStatusCode.Unauthorized,
+                    throw new RestException(HandlerResponse.ClientIsNotAuthorized,
                         new {info = "Użytkownik dla podanego loginu już istnieje"});
                 }
 
@@ -102,7 +103,7 @@ namespace Application.User
 
                 if (!result.Succeeded)
                 {
-                    throw new RestException(HttpStatusCode.Unauthorized,
+                    throw new RestException(HandlerResponse.ClientIsNotAuthorized,
                         new {info = "Użytkownik dla podanego loginu już istnieje"});
                 }
 

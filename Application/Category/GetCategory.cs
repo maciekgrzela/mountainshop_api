@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Category.Resources;
+using Application.Core;
 using Application.Errors;
 using AutoMapper;
 using MediatR;
@@ -34,7 +35,7 @@ namespace Application.Category
 
                 if (category == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Kategoria o podanym identyfikatorze nie została znaleziona"});
                 }
 

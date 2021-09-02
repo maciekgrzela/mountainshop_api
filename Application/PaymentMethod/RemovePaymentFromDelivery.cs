@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using FluentValidation;
 using MediatR;
@@ -49,13 +50,13 @@ namespace Application.PaymentMethod
 
                 if (existingDelivery == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono metody dostawy dla podanego identyfikatora"});
                 }
                 
                 if (existingPayment == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono metody płatności dla podanego identyfikatora"});
                 }
 

@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using AutoMapper;
 using MediatR;
@@ -32,7 +33,7 @@ namespace Application.User
 
                 if (user == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono użytkownika dla podanego identyfikatora"});
                 }
 

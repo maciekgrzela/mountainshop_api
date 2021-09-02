@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using FluentValidation;
 using MediatR;
@@ -48,7 +49,7 @@ namespace Application.User
 
                 if (user == null)
                 {
-                    throw new RestException(HttpStatusCode.Unauthorized, new
+                    throw new RestException(HandlerResponse.ClientIsNotAuthorized, new
                     {
                         user = "Użytkownik nie istnieje!"
                     });
@@ -59,12 +60,12 @@ namespace Application.User
 
                 if (userRoles.Count == 0)
                 {
-                    throw new RestException(HttpStatusCode.Unauthorized, new { info = "Użytkownik nie posiada przypisanej roli"});
+                    throw new RestException(HandlerResponse.ClientIsNotAuthorized, new { info = "Użytkownik nie posiada przypisanej roli"});
                 }
 
                 if (!checkPassword.Succeeded)
                 {
-                    throw new RestException(HttpStatusCode.Unauthorized, new {info = "Niepoprawne dane logowania"});
+                    throw new RestException(HandlerResponse.ClientIsNotAuthorized, new {info = "Niepoprawne dane logowania"});
                 }
 
                 return new LoggedUserResource

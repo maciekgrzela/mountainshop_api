@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using Application.PaymentMethod.Resources;
 using AutoMapper;
@@ -44,7 +45,7 @@ namespace Application.PaymentMethod
 
                 if (existingPaymentMethod == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono metody płatności dla podanego identyfikatora"});
                 }
 

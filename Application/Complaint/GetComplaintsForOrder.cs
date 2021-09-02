@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Complaint.Resources;
+using Application.Core;
 using Application.Errors;
 using AutoMapper;
 using FluentValidation;
@@ -47,7 +48,7 @@ namespace Application.Complaint
 
                 if (order == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono zamówienia dla podanego identyfikatora"});
                 }
                 

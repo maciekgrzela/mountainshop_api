@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using AutoMapper;
 using Domain.Models;
@@ -103,19 +104,19 @@ namespace Application.Order
 
                 if (existingUser == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono użytkownika dla podanego identyfikatora"});
                 }
                 
                 if (existingPayment == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono metody płatności dla podanego identyfikatora"});
                 }
                 
                 if (existingDelivery == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono metody dostawy dla podanego identyfikatora"});
                 }
 
@@ -124,7 +125,7 @@ namespace Application.Order
 
                 if (productsIds.Intersect(orderedIds).Count() != orderedIds.Count())
                 {
-                    throw new RestException(HttpStatusCode.BadRequest,
+                    throw new RestException(HandlerResponse.InvalidRequest,
                         new {info = "Identyfikator jednego z podanych produktów jest nieprawidłowy"});
                 }
 

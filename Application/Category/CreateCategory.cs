@@ -3,6 +3,7 @@ using System.Data;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using Application.Photo;
 using FluentValidation;
@@ -61,7 +62,7 @@ namespace Application.Category
                     }
                     catch (Exception e)
                     {
-                        throw new RestException(HttpStatusCode.BadRequest, new {info = e.Message});
+                        throw new RestException(HandlerResponse.InvalidRequest, new {info = e.Message});
                     }
                 }
                 

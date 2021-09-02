@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -36,7 +37,7 @@ namespace API.Middleware
             {
                 case RestException re:
                     errors = re.Errors;
-                    context.Response.StatusCode = (int) re.StatusCode;
+                    context.Response.StatusCode = (int) GetStatusCodeByHandlerResponse(re.Response);
                     break;
                 case { } ex:
                     errors = string.IsNullOrWhiteSpace(ex.Message) ? "Error" : ex.Message;
@@ -50,6 +51,18 @@ namespace API.Middleware
             });
 
             await context.Response.WriteAsync(results);
+        }
+
+        private HttpStatusCode GetStatusCodeByHandlerResponse(HandlerResponse response)
+        {
+            return response switch
+            {
+                HandlerResponse.ResourceNotFound => HttpStatusCode.NotFound,
+                HandlerResponse.InvalidRequest => HttpStatusCode.BadRequest,
+                HandlerResponse.ClientHasNoAccess => HttpStatusCode.Forbidden,
+                HandlerResponse.ClientIsNotAuthorized => HttpStatusCode.Unauthorized,
+                _ => HttpStatusCode.InternalServerError
+            };
         }
     }
 }
