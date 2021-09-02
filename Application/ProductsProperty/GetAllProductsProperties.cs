@@ -38,8 +38,8 @@ namespace Application.ProductsProperty
                     .ProjectTo<ProductsPropertyResource>(_mapper.ConfigurationProvider)
                     .AsQueryable();
 
-                productsProperties = FilterByName(productsProperties, request.QueryParams);
-                productsProperties = SortByName(productsProperties, request.QueryParams);
+                productsProperties = FilterByName(productsProperties, request.QueryParams.NameFilter);
+                productsProperties = SortByName(productsProperties, request.QueryParams.NameSort);
 
                 var productsPropertiesList = await PagedList<ProductsPropertyResource>.ToPagedListAsync(productsProperties,
                     request.QueryParams.PageNumber, request.QueryParams.PageSize);
@@ -47,26 +47,23 @@ namespace Application.ProductsProperty
                 return productsPropertiesList;
             }
 
-            private IQueryable<ProductsPropertyResource> SortByName(IQueryable<ProductsPropertyResource> productsProperties, ProductsPropertyParams requestQueryParams)
+            private IQueryable<ProductsPropertyResource> SortByName(IQueryable<ProductsPropertyResource> productsProperties, bool? filter)
             {
-                if (requestQueryParams.NameAsc != null)
+                if (filter != null)
                 {
-                    productsProperties = productsProperties.OrderBy(p => p.Name);
-                }
-                
-                if (requestQueryParams.NameAsc != null)
-                {
-                    productsProperties = productsProperties.OrderByDescending(p => p.Name);
+                    productsProperties = filter.Value
+                        ? productsProperties.OrderBy(p => p.Name)
+                        : productsProperties.OrderByDescending(p => p.Name);
                 }
 
                 return productsProperties;
             }
 
-            private IQueryable<ProductsPropertyResource> FilterByName(IQueryable<ProductsPropertyResource> productsProperties, ProductsPropertyParams requestQueryParams)
+            private IQueryable<ProductsPropertyResource> FilterByName(IQueryable<ProductsPropertyResource> productsProperties, string filter)
             {
-                if (!string.IsNullOrWhiteSpace(requestQueryParams.NameFilter))
+                if (!string.IsNullOrWhiteSpace(filter))
                 {
-                    productsProperties = productsProperties.Where(p => p.Name.Contains(requestQueryParams.NameFilter));
+                    productsProperties = productsProperties.Where(p => p.Name.Contains(filter));
                 }
 
                 return productsProperties;

@@ -38,10 +38,10 @@ namespace Application.PaymentMethod
                     .ProjectTo<PaymentMethodResource>(_mapper.ConfigurationProvider)
                     .AsQueryable();
 
-                paymentMethods = FilterByPrice(paymentMethods, request.QueryParams);
-                paymentMethods = FilterByName(paymentMethods, request.QueryParams);
-                paymentMethods = SortByPrice(paymentMethods, request.QueryParams);
-                paymentMethods = SortByName(paymentMethods, request.QueryParams);
+                paymentMethods = FilterByPrice(paymentMethods, request.QueryParams.PriceFilter);
+                paymentMethods = FilterByName(paymentMethods, request.QueryParams.NameFilter);
+                paymentMethods = SortByPrice(paymentMethods, request.QueryParams.PriceSort);
+                paymentMethods = SortByName(paymentMethods, request.QueryParams.NameSort);
 
                 var paymentMethodsList = await PagedList<PaymentMethodResource>.ToPagedListAsync(paymentMethods,
                     request.QueryParams.PageNumber, request.QueryParams.PageSize);
@@ -49,52 +49,45 @@ namespace Application.PaymentMethod
                 return paymentMethodsList;
             }
 
-            private IQueryable<PaymentMethodResource> SortByName(IQueryable<PaymentMethodResource> paymentMethods, PaymentMethodParams requestQueryParams)
+            private IQueryable<PaymentMethodResource> SortByName(IQueryable<PaymentMethodResource> paymentMethods, bool? filter)
             {
-                if (requestQueryParams.NameAsc != null)
+                if (filter != null)
                 {
-                    paymentMethods = paymentMethods.OrderBy(p => p.Name);
-                }
-
-                if (requestQueryParams.NameDesc != null)
-                {
-                    paymentMethods = paymentMethods.OrderByDescending(p => p.Name);
+                    paymentMethods = filter.Value
+                        ? paymentMethods.OrderBy(p => p.Name)
+                        : paymentMethods.OrderByDescending(p => p.Name);
                 }
 
                 return paymentMethods;
             }
 
-            private IQueryable<PaymentMethodResource> SortByPrice(IQueryable<PaymentMethodResource> paymentMethods, PaymentMethodParams requestQueryParams)
+            private IQueryable<PaymentMethodResource> SortByPrice(IQueryable<PaymentMethodResource> paymentMethods, bool? filter)
             {
-                if (requestQueryParams.PriceAsc != null)
+                if (filter != null)
                 {
-                    paymentMethods = paymentMethods.OrderBy(p => p.Price);
-                }
-
-                if (requestQueryParams.PriceDesc != null)
-                {
-                    paymentMethods = paymentMethods.OrderByDescending(p => p.Price);
+                    paymentMethods = filter.Value
+                        ? paymentMethods.OrderBy(p => p.Price)
+                        : paymentMethods.OrderByDescending(p => p.Price);
                 }
 
                 return paymentMethods;
             }
 
-            private IQueryable<PaymentMethodResource> FilterByName(IQueryable<PaymentMethodResource> paymentMethods, PaymentMethodParams requestQueryParams)
+            private IQueryable<PaymentMethodResource> FilterByName(IQueryable<PaymentMethodResource> paymentMethods, string filter)
             {
-                if (!string.IsNullOrWhiteSpace(requestQueryParams.NameFilter))
+                if (!string.IsNullOrWhiteSpace(filter))
                 {
-                    paymentMethods = paymentMethods.Where(p => p.Name.Contains(requestQueryParams.NameFilter));
+                    paymentMethods = paymentMethods.Where(p => p.Name.Contains(filter));
                 }
 
                 return paymentMethods;
             }
 
-            private IQueryable<PaymentMethodResource> FilterByPrice(IQueryable<PaymentMethodResource> paymentMethods, PaymentMethodParams requestQueryParams)
+            private IQueryable<PaymentMethodResource> FilterByPrice(IQueryable<PaymentMethodResource> paymentMethods, double? filter)
             {
-                if (requestQueryParams.PriceFilter != null)
+                if (filter != null)
                 {
-                    paymentMethods = paymentMethods.Where(p =>
-                        requestQueryParams.PriceFilter != null && p.Price.CompareTo(requestQueryParams.PriceFilter) == 0);
+                    paymentMethods = paymentMethods.Where(p => p.Price.CompareTo(filter) == 0);
                 }
 
                 return paymentMethods;

@@ -39,10 +39,10 @@ namespace Application.Producer
                     .ProjectTo<ProducerResource>(_mapper.ConfigurationProvider).AsQueryable();
 
 
-                producers = FilterByName(producers, request.QueryParams);
-                producers = FilterByDescription(producers, request.QueryParams);
-                producers = SortByName(producers, request.QueryParams);
-                producers = SortByDescription(producers, request.QueryParams);
+                producers = FilterByName(producers, request.QueryParams.NameFilter);
+                producers = FilterByDescription(producers, request.QueryParams.DescriptionFilter);
+                producers = SortByName(producers, request.QueryParams.NameSort);
+                producers = SortByDescription(producers, request.QueryParams.DescriptionSort);
 
                 var producersList = await PagedList<ProducerResource>.ToPagedListAsync(producers,
                     request.QueryParams.PageNumber, request.QueryParams.PageSize);
@@ -51,51 +51,45 @@ namespace Application.Producer
                 return producersList;
             }
 
-            private IQueryable<ProducerResource> SortByDescription(IQueryable<ProducerResource> producers, ProducerParams requestQueryParams)
+            private IQueryable<ProducerResource> SortByDescription(IQueryable<ProducerResource> producers, bool? filter)
             {
-                if (requestQueryParams.DescriptionAsc != null)
+                if (filter != null)
                 {
-                    producers = producers.OrderBy(p => p.Description);
-                }
-                
-                if (requestQueryParams.DescriptionDesc != null)
-                {
-                    producers = producers.OrderByDescending(p => p.Description);
+                    producers = filter.Value
+                        ? producers.OrderBy(p => p.Description)
+                        : producers.OrderByDescending(p => p.Description);
                 }
 
                 return producers;
             }
 
-            private IQueryable<ProducerResource> SortByName(IQueryable<ProducerResource> producers, ProducerParams requestQueryParams)
+            private IQueryable<ProducerResource> SortByName(IQueryable<ProducerResource> producers, bool? filter)
             {
-                if (requestQueryParams.NameAsc != null)
+                if (filter != null)
                 {
-                    producers = producers.OrderBy(p => p.Name);
-                }
-                
-                if (requestQueryParams.NameDesc != null)
-                {
-                    producers = producers.OrderByDescending(p => p.Name);
+                    producers = filter.Value
+                        ? producers.OrderBy(p => p.Name)
+                        : producers.OrderByDescending(p => p.Name);
                 }
 
                 return producers;
             }
 
-            private IQueryable<ProducerResource> FilterByDescription(IQueryable<ProducerResource> producers, ProducerParams requestQueryParams)
+            private IQueryable<ProducerResource> FilterByDescription(IQueryable<ProducerResource> producers, string filter)
             {
-                if (!string.IsNullOrWhiteSpace(requestQueryParams.DescriptionFilter))
+                if (!string.IsNullOrWhiteSpace(filter))
                 {
-                    producers = producers.Where(p => p.Description.Contains(requestQueryParams.DescriptionFilter));
+                    producers = producers.Where(p => p.Description.Contains(filter));
                 }
 
                 return producers;
             }
 
-            private IQueryable<ProducerResource> FilterByName(IQueryable<ProducerResource> producers, ProducerParams requestQueryParams)
+            private IQueryable<ProducerResource> FilterByName(IQueryable<ProducerResource> producers, string filter)
             {
-                if (!string.IsNullOrWhiteSpace(requestQueryParams.NameFilter))
+                if (!string.IsNullOrWhiteSpace(filter))
                 {
-                    producers = producers.Where(p => p.Name.Contains(requestQueryParams.NameFilter));
+                    producers = producers.Where(p => p.Name.Contains(filter));
                 }
 
                 return producers;
