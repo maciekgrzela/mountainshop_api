@@ -3,6 +3,7 @@ using System.Data;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using Application.Photo;
 using FluentValidation;
@@ -51,7 +52,7 @@ namespace Application.Product
 
                 if (existingProduct == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono produktu dla podanego identyfikatora"});
                 }
                 
@@ -63,7 +64,7 @@ namespace Application.Product
                 }
                 catch (Exception e)
                 {
-                    throw new RestException(HttpStatusCode.BadRequest, new {info = e.Message});
+                    throw new RestException(HandlerResponse.InvalidRequest, new {info = e.Message});
                 }
 
                 existingProduct.Image = uploadedImage.Url;

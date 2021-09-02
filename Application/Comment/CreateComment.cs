@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using Domain.Models;
 using FluentValidation;
@@ -70,7 +71,7 @@ namespace Application.Comment
 
                 if (existingUser == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono użytkownika dla podanego identyfikatora"});
                 }
 
@@ -78,7 +79,7 @@ namespace Application.Comment
 
                 if (existingProduct == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono produktu dla podanego identyfikatora"});
                 }
 

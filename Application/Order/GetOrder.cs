@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using Application.Order.Resources;
 using AutoMapper;
@@ -50,7 +51,7 @@ namespace Application.Order
 
                 if (order == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Kategoria o podanym identyfikatorze nie została znaleziona"});
                 }
 

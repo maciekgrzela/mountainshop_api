@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Comment.Resources;
+using Application.Core;
 using Application.Errors;
 using AutoMapper;
 using FluentValidation;
@@ -44,7 +45,7 @@ namespace Application.Comment
 
                 if (comment == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono komentarza dla podanego identyfikatora"});
                 }
 

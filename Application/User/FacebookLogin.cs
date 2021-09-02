@@ -4,6 +4,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using Application.Validators;
 using AutoMapper;
@@ -50,7 +51,7 @@ namespace Application.User
 
                 if (userAccountInfo == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono użytkownika dla podanego identyfikatora"});
                 }
 
@@ -74,7 +75,7 @@ namespace Application.User
 
                     if (!result.Succeeded)
                     {
-                        throw new RestException(HttpStatusCode.Unauthorized,
+                        throw new RestException(HandlerResponse.ClientIsNotAuthorized,
                             new {info = "Użytkownik dla podanego loginu już istnieje"});
                     }
 

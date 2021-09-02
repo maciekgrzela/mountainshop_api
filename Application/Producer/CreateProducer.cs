@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using Application.Photo;
 using Domain.Models;
@@ -62,7 +63,7 @@ namespace Application.Producer
                 }
                 catch (Exception e)
                 {
-                    throw new RestException(HttpStatusCode.BadRequest, new {info = e.Message});
+                    throw new RestException(HandlerResponse.InvalidRequest, new {info = e.Message});
                 }
                 
                 var producer = new Domain.Models.Producer

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using Application.Photo;
 using Application.Product.Validators;
@@ -108,7 +109,7 @@ namespace Application.Product
 
                 if (producer == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono producenta dla podanego identyfikatora"});
                 }
 
@@ -116,7 +117,7 @@ namespace Application.Product
 
                 if (category == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono kategorii dla podanego identyfikatora"});
                 }
 
@@ -126,7 +127,7 @@ namespace Application.Product
                 var count = existingPropertiesIds.Intersect(propertiesIds).Count();
                 if (count != propertiesIds.Count)
                 {
-                    throw new RestException(HttpStatusCode.BadRequest,
+                    throw new RestException(HandlerResponse.InvalidRequest,
                         new {info = "Identyfikatory niektórych właściwości produktu są niepoprawne"});
                 }
 

@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using FluentValidation;
 using MediatR;
@@ -58,7 +59,7 @@ namespace Application.DeliveryMethod
 
                 if (existingDeliveryMethod == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono metody dostawy dla podanego identyfikatora"});
                 }
 

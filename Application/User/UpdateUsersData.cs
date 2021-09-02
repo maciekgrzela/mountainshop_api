@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -40,7 +41,7 @@ namespace Application.User
 
                 if (existingUser == null)
                 {
-                    throw new RestException(HttpStatusCode.Unauthorized,
+                    throw new RestException(HandlerResponse.ClientIsNotAuthorized,
                         new {info = "Zaloguj się przed wykonaniem powyższej operacji"});
                 }
 

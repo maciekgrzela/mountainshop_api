@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Errors;
 using Application.Order.Resources;
 using AutoMapper;
@@ -50,7 +51,7 @@ namespace Application.Order
 
                 if (existingUser == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono użytkownika dla podanego identyfikatora"});
                 }
 
@@ -65,7 +66,7 @@ namespace Application.Order
 
                 if (order == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
+                    throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono zamówienia dla podanego identyfikatora"});
                 }
 

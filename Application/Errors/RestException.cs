@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Net;
+using Application.Core;
 
 namespace Application.Errors
 {
     public class RestException : Exception
     {
-        public HttpStatusCode StatusCode { get; }
+        public HandlerResponse Response { get; }
         public object Errors { get; }
         
-        public RestException(HttpStatusCode statusCode, object errors = null)
+        public RestException(HandlerResponse response, object errors = null)
         {
-            StatusCode = statusCode;
+            Response = response;
             Errors = errors;
         }
     }
