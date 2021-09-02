@@ -44,8 +44,10 @@ namespace Application.Comment
                                                 .ProjectTo<CommentResource>(_mapper.ConfigurationProvider)
                                                 .AsQueryable();
 
-                comments = FilterByUserId(comments, request.QueryParams);
-                comments = FilterByProductId(comments, request.QueryParams);
+                comments = FilterByUser(comments, request.QueryParams.UserFilter);
+                comments = SortByUser(comments, request.QueryParams.UserSort);
+                comments = FilterByProduct(comments, request.QueryParams.ProductFilter);
+                comments = SortByProduct(comments, request.QueryParams.ProductSort);
 
                 var commentsList = await PagedList<CommentResource>.ToPagedListAsync(comments, request.QueryParams.PageNumber,
                     request.QueryParams.PageSize);
@@ -53,21 +55,45 @@ namespace Application.Comment
                 return commentsList;
             }
 
-            private static IQueryable<CommentResource> FilterByProductId(IQueryable<CommentResource> comments, CommentParams requestQueryParams)
+            private IQueryable<CommentResource> SortByProduct(IQueryable<CommentResource> comments, bool? queryParamsProductSort)
             {
-                if (requestQueryParams.ProductId != Guid.Empty)
+                if (queryParamsProductSort != null)
                 {
-                    comments = comments.Where(p => requestQueryParams.ProductId.ToString().Equals(p.Product.Id.ToString()));
+                    comments = queryParamsProductSort.Value
+                        ? comments.OrderBy(p => p.Product.Name)
+                        : comments.OrderByDescending(p => p.Product.Name);
                 }
 
                 return comments;
             }
 
-            private static IQueryable<CommentResource> FilterByUserId(IQueryable<CommentResource> comments, CommentParams requestQueryParams)
+            private IQueryable<CommentResource> SortByUser(IQueryable<CommentResource> comments, bool? queryParamsUserSort)
             {
-                if (!string.IsNullOrWhiteSpace(requestQueryParams.UserId))
+                if (queryParamsUserSort != null)
                 {
-                    comments = comments.Where(p => requestQueryParams.UserId.Equals(p.User.Id));
+                    comments = queryParamsUserSort.Value
+                        ? comments.OrderBy(p => p.User.FirstName)
+                        : comments.OrderByDescending(p => p.User.FirstName);
+                }
+
+                return comments;
+            }
+
+            private static IQueryable<CommentResource> FilterByProduct(IQueryable<CommentResource> comments, Guid? filter)
+            {
+                if (filter != null)
+                {
+                    comments = comments.Where(p => filter.ToString().Equals(p.Product.Id.ToString()));
+                }
+
+                return comments;
+            }
+
+            private static IQueryable<CommentResource> FilterByUser(IQueryable<CommentResource> comments, string filter)
+            {
+                if (!string.IsNullOrWhiteSpace(filter))
+                {
+                    comments = comments.Where(p => filter.Equals(p.User.Id));
                 }
 
                 return comments;

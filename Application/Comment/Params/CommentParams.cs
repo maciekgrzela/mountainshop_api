@@ -4,8 +4,10 @@ namespace Application.Comment.Params
 {
     public class CommentParams : PagingParams
     {
-        public string UserId { get; set; }
-        public Guid ProductId { get; set; }
-        public DateTime Created { get; set; } = DateTime.Now;
+        public string UserFilter { get; set; }
+        public bool? UserSort { get; set; }
+        public Guid? ProductFilter { get; set; }
+        public bool? ProductSort { get; set; }
+        public DateTime? CreatedSort { get; set; }
     }
 }
