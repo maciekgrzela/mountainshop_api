@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Application;
 using Application.Category;
+using Application.Category.Params;
 using Application.Category.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ namespace API.Controllers
     {
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllAsync([FromQuery] PagingParams queryParams)
+        public async Task<IActionResult> GetAllAsync([FromQuery] CategoryParams queryParams)
         {
             var categories = await Mediator.Send(new GetAllCategories.Query{ QueryParams = queryParams});
             return HandlePaginationHeader(categories);
