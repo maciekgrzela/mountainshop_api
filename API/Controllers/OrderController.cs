@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Application.Complaint;
 using Application.Complaint.Resources;
 using Application.Order;
+using Application.Order.Params;
 using Application.Order.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,10 @@ namespace API.Controllers
     {
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<List<OrderResource>>> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync([FromQuery] OrderParams queryParams)
         {
-            return await Mediator.Send(new GetAllOrders.Query());
+            var orders = await Mediator.Send(new GetAllOrders.Query{QueryParams = queryParams});
+            return HandlePaginationHeader(orders);
         }
 
         [HttpGet("{id}")]

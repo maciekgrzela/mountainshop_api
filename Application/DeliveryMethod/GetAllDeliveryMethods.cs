@@ -39,8 +39,10 @@ namespace Application.DeliveryMethod
                     .OrderBy(p => p.Price)
                     .AsQueryable();
 
-                deliveryMethods = FilterByPrice(deliveryMethods, request.QueryParams);
-                deliveryMethods = SortByPrice(deliveryMethods, request.QueryParams);
+                deliveryMethods = FilterByPrice(deliveryMethods, request.QueryParams.PriceFilter);
+                deliveryMethods = SortByPrice(deliveryMethods, request.QueryParams.PriceSort);
+                deliveryMethods = FilterByName(deliveryMethods, request.QueryParams.NameFilter);
+                deliveryMethods = SortByName(deliveryMethods, request.QueryParams.NameSort);
 
                 var deliveryMethodsList = await PagedList<DeliveryMethodResource>.ToPagedListAsync(deliveryMethods,
                     request.QueryParams.PageNumber, request.QueryParams.PageSize);
@@ -48,27 +50,45 @@ namespace Application.DeliveryMethod
                 return deliveryMethodsList;
             }
 
-            private IQueryable<DeliveryMethodResource> SortByPrice(IQueryable<DeliveryMethodResource> deliveryMethods, DeliveryMethodParams requestQueryParams)
+            private IQueryable<DeliveryMethodResource> SortByName(IQueryable<DeliveryMethodResource> deliveryMethods, bool? queryParamsNameSort)
             {
-                if (requestQueryParams.PriceAsc != null)
+                if (queryParamsNameSort != null)
                 {
-                    deliveryMethods = deliveryMethods.OrderBy(p => p.Price);
-                }
-
-                if (requestQueryParams.PriceDesc != null)
-                {
-                    deliveryMethods = deliveryMethods.OrderByDescending(p => p.Price);
+                    deliveryMethods = queryParamsNameSort.Value
+                        ? deliveryMethods.OrderBy(p => p.Name)
+                        : deliveryMethods.OrderByDescending(p => p.Name);
                 }
 
                 return deliveryMethods;
             }
 
-            private IQueryable<DeliveryMethodResource> FilterByPrice(IQueryable<DeliveryMethodResource> deliveryMethods, DeliveryMethodParams requestQueryParams)
+            private IQueryable<DeliveryMethodResource> FilterByName(IQueryable<DeliveryMethodResource> deliveryMethods, string queryParamsNameFilter)
             {
-                if (requestQueryParams.PriceFilter != null)
+                if (queryParamsNameFilter != null)
                 {
-                    deliveryMethods = deliveryMethods.Where(p =>
-                        requestQueryParams.PriceFilter != null && p.Price.CompareTo(requestQueryParams.PriceFilter) == 0);
+                    deliveryMethods = deliveryMethods.Where(p => p.Name.Contains(queryParamsNameFilter));
+                }
+
+                return deliveryMethods;
+            }
+
+            private IQueryable<DeliveryMethodResource> SortByPrice(IQueryable<DeliveryMethodResource> deliveryMethods, bool? filter)
+            {
+                if (filter != null)
+                {
+                    deliveryMethods = filter.Value
+                        ? deliveryMethods.OrderBy(p => p.Price)
+                        : deliveryMethods.OrderByDescending(p => p.Price);
+                }
+
+                return deliveryMethods;
+            }
+
+            private IQueryable<DeliveryMethodResource> FilterByPrice(IQueryable<DeliveryMethodResource> deliveryMethods, double? filter)
+            {
+                if (filter != null)
+                {
+                    deliveryMethods = deliveryMethods.Where(p => p.Price.CompareTo(filter.Value) == 0);
                 }
 
                 return deliveryMethods;

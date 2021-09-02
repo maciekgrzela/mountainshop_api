@@ -3,11 +3,9 @@
     public class DeliveryMethodParams : PagingParams
     {
         public double? PriceFilter { get; set; }
-        public bool? PriceAsc { get; set; }
-        public bool? PriceDesc { get; set; }
-        public bool? TakeawayFilter { get; set; }
-        public bool? TakeawayAsc { get; set; }
-        public bool? TakeawayDesc { get; set; }
+        public bool? PriceSort { get; set; }
+        public string NameFilter { get; set; }
+        public bool? NameSort { get; set; }
     }
 
 }

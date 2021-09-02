@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Application;
 using Application.Category;
 using Application.Comment;
 using Application.Comment.Resources;
@@ -19,7 +20,7 @@ namespace API.Controllers
     {
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<List<ProductResource>>> GetAllProductsAsync([FromQuery] ProductParams queryParams)
+        public async Task<ActionResult<PagedList<ProductResource>>> GetAllProductsAsync([FromQuery] ProductParams queryParams)
         {
             var products = await Mediator.Send(new GetAllProducts.Query {QueryParams = queryParams});
             return HandlePaginationHeader(products);

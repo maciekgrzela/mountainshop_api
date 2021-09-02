@@ -15,7 +15,7 @@ namespace API.Controllers
     {
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<List<ProductsPropertyResource>>> GetAllAsync([FromQuery] ProductsPropertyParams queryParams)
+        public async Task<IActionResult> GetAllAsync([FromQuery] ProductsPropertyParams queryParams)
         {
             var productsProperties = await Mediator.Send(new GetAllProductsProperties.Query{ QueryParams = queryParams});
             return HandlePaginationHeader(productsProperties);
