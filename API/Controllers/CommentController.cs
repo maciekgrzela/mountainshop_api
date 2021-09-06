@@ -30,7 +30,6 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> CreateAsync(CreateComment.Command data)
         {
             await Mediator.Send(data);

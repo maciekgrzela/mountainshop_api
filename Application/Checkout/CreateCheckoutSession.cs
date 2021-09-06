@@ -30,7 +30,8 @@ namespace Application.Checkout
         {
             public CommandValidator()
             {
-                RuleFor(p => p.Id).NotEmpty().NotNull();
+                RuleFor(p => p.Id)
+                    .NotEmpty().WithMessage("Pole Identyfikatora nie może być puste");
             }
         }
 
@@ -57,10 +58,14 @@ namespace Application.Checkout
                     {
                         "card", "p24"
                     },
-                    LineItems = itemOptions,
+                    LineItems = itemOptions.Item1,
                     Mode = "payment",
-                    SuccessUrl = $"{domain}created?stripe_redirect=true",
-                    CancelUrl = $"{domain}created?stripe_redirect=false"
+                    SuccessUrl = $"{domain}created?stripe_redirect=true&session={{CHECKOUT_SESSION_ID}}",
+                    CancelUrl = $"{domain}created?stripe_redirect=false&session={{CHECKOUT_SESSION_ID}}",
+                    Metadata = new Dictionary<string, string>
+                    {
+                        {"OrderId", itemOptions.Item2.ToString()}
+                    }
                 };
 
                 var service = new SessionService();
@@ -69,7 +74,7 @@ namespace Application.Checkout
                 return session.Url;
             }
 
-            private async Task<List<SessionLineItemOptions>> GenerateSessionLineItemOptionsAsync(string userId)
+            private async Task<(List<SessionLineItemOptions>, Guid)> GenerateSessionLineItemOptionsAsync(string userId)
             {
                 var existingUser = await _userManager.FindByIdAsync(userId);
 
@@ -78,7 +83,7 @@ namespace Application.Checkout
                     throw new RestException(HandlerResponse.ResourceNotFound,
                         new {info = "Nie znaleziono użytkownika dla podanego identyfikatora"});
                 }
-                
+
                 var order = await _context.Orders
                     .Include(p => p.OrderDetails)
                     .Include(p => p.DeliveryMethod)
@@ -112,8 +117,6 @@ namespace Application.Checkout
                         UnitAmount = (long?) (Math.Round(order.DeliveryMethod.Price,2) * 100),
                         Currency = "pln"
                     };
-                    
-                    Console.WriteLine(deliveryPriceOptions.UnitAmountDecimal);
 
                     var deliveryPrice = await priceService.CreateAsync(deliveryPriceOptions);
                     
@@ -172,7 +175,7 @@ namespace Application.Checkout
                     });
                 }
                 
-                return lineItems;
+                return (lineItems, order.Id);
             }
         }
     }
